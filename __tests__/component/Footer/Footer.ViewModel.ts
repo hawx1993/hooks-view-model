@@ -1,4 +1,4 @@
-import { GLOBAL_KEYS, StoreViewModel } from '../GlobalStore';
+import StoreViewModel from '../../../src/StoreViewModel';
 
 class FooterViewModel extends StoreViewModel<any> {
   updateCount = count => {

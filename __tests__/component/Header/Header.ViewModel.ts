@@ -1,4 +1,5 @@
-import { GLOBAL_KEYS, StoreViewModel } from '../GlobalStore';
+import StoreViewModel from '../../../src/StoreViewModel';
+import { GLOBAL_KEYS } from '../types';
 const random = require('random-value-generator');
 
 class HeaderViewModel extends StoreViewModel<any> {

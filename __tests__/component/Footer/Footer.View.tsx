@@ -1,5 +1,5 @@
 import React from 'react';
-import { useVM } from '../GlobalStore/useVM';
+import { useVM } from '../../../src/useVM';
 import { FooterViewModel } from './Footer.ViewModel';
 
 export default function Footer() {

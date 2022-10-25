@@ -1,7 +1,7 @@
 import React from 'react';
 import { HeaderViewModel } from './Header.ViewModel';
-import { useVM } from '../GlobalStore/useVM';
-import { GLOBAL_KEYS } from '../GlobalStore';
+import { useVM } from '../../../src/useVM';
+import { GLOBAL_KEYS } from '../types';
 
 export default function Header() {
   const {
