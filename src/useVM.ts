@@ -3,9 +3,7 @@ function useVM<VM, P, T>(
   props: P,
   context?: T,
 ) {
-  const newProps = Object.assign(props, {
-    vmName: ViewModel.name,
-  });
+  const newProps = { ...props, vmName: ViewModel.name };
   const vm = new ViewModel(newProps, context);
   return vm;
 }

@@ -63,9 +63,24 @@ class ViewModel extends StoreViewModel {
 - `updateGlobalStoreByKey(key, value)`：根据指定的key，更新全局store；主要用于 `ViewModel`，hooks也可使用，规范上来说不推荐
 - `updateCurrentStore(value)`：无需指定key，即可更新当前view对应的store；主要用于 `ViewModel`，hooks也可使用，规范上来说不推荐
 - `useGlobalStore(key, initialState?)`：根据指定的key，响应`updateGlobalStoreByKey` 的更新；主要用于hooks中
+
+```tsx
+const [viewData, updateAge] = useGlobalStore('testKey', {name: 'testValue', age: 18})
+
+updateAge({
+  age: 30
+})
+console.log(viewData) // {name: 'testValue', age: 18}
+```
+
 - `useCurrentStore(initialState?)`：获取当前的store，响应`updateCurrentStore` 的更新，可传入初始状态，类似`useState(false)`；主要用于hooks中
 - `getGlobalStoreByKey(key)`：根据指定的key获取全局store，主要用于`ViewModel`，hooks也可使用，规范上来说不推荐
 - `getCurrentStore`：获取当前store，无需指定key，主要用于`ViewModel`，hooks也可使用，规范上来说不推荐
+- `useVM(ViewMode, props)`: 传入ViewModel和props，返回`ViewModel`和`StoreViewModel`所有public api，同时将props 传递给ViewModel，由ViewModel处理相关数据
+
+```tsx
+const {useGlobalStore, updateCurrentStore, otherViewModelApi} = useVM(ViewMode, {});
+```
 
 补充api：
 
