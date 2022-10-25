@@ -11362,11 +11362,6 @@ ramda@^0.28.0:
   resolved "http://npm.perfma-inc.com:80/ramda/-/ramda-0.28.0.tgz#acd785690100337e8b063cab3470019be427cc97"
   integrity sha512-9QnLuG/kPVgWvMQ4aODhsBUFKOUmnbUnsSXACv+NCQZcHbeb+v8Lodp8OVxtRULN1/xOyYLLaL6npE6dMq5QTA==
 
-random-value-generator@^0.2.0:
-  version "0.2.0"
-  resolved "http://npm.perfma-inc.com:80/random-value-generator/-/random-value-generator-0.2.0.tgz#7a828f7a70498e560d7f699a3e4750be9e158699"
-  integrity sha512-ZUdhwZu52MwjLtAo92S49t2HGrucsz0Y/S8VazRWcGku71QK+y1uKC43OBMJyU9Ha37OyD9o4Qg3RtIyz+tdUA==
-
 randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.1.0:
   version "2.1.0"
   resolved "http://npm.perfma-inc.com:80/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
