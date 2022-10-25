@@ -74,16 +74,35 @@ class ViewModel extends StoreViewModel {
 
 > 本地状态调试：
 
-打开 Chrome 控制台，输入 globalStore，即可查看当前 view 的所有状态.
+打开 Chrome 控制台，输入 globalStore，即可查看全局状态和当前view 对应的状态：
 
-### 优势
+<img src="https://media.perfma.net/guitar/image/aY3h_ZGX5iPGZz_1fyvMa.jpg" />
 
-1、不同的 key，数据不会互相影响，store a update， store b 不会更新
+**可见的特点或优势如下：**
 
-2、×xx 数据更新之后，教上次无变化， 则组件不更新
+1、代码更具有可组织性，可维护性和可测试性，职责划分更清晰
 
-3、可做到细粒度更新，可更新对象单个字段，其他不更新的字段不受影响
+2、ViewModel的本意是逻辑处理，state状态处理，不需要频繁的做拆分，View与ViewModel是绑定的关系，一一对应的关系
 
-4、无需频繁使用 useState 更新对象，所有的数据可通过 useGlobalStore 获取
+3、基于hooks实现，无需引入第三方库，依托class和react hooks实现，低学习成本
 
-5、方便调试。可直接在控制台输入 globalStore 即可获取所有状态
+4、View可以响应ViewModel触发的状态变化
+
+5、依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
+
+6、即使多次更新state，state未改变，view也不会re-render
+
+7、有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
+
+8、写成类的形式，方便在各个ViewModel实现继承，需要被继承viewModel可抽离成单个vm
+
+9、还可以使用useVM，来复用其他ViewModel的方法。
+
+10、现有ViewModel 仍然可兼容state hooks的实现方式，可在UI层引入需要复用的hooks，hooks返回的数据可作为props传递给ViewModel，不存在复用性差的情况
+
+11、相较于原生的useState hooks，数据清晰，更方便debug
+
+12、可实现全局数据更新，跨组件数据通信，无需useReducer
+
+ -   useReducer本质也是useState的替代方案，它接收一个形如 `(state, action) => newState` 的 reducer，并返回当前 `state` 以及与之配套的 `dispatch` 方法
+ -   useReducer 使用起来更加麻烦，需要在顶层组件包裹Provider，需要配置各种action type
