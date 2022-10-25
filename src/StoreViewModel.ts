@@ -229,4 +229,4 @@ class StoreViewModel<P = { name: string }> {
   currentStore,
 };
 
-export { StoreViewModel };
+export default StoreViewModel;
