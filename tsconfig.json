@@ -1,1 +1,19 @@
-{}
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "declaration": true,
+  },
+  "exclude": [
+      "node_modules",
+      "dist",
+      "typings",
+      "**/__test__",
+      "test",
+      "tests"
+  ],
+  "include": ["./src/*.ts"],
+}

@@ -2,10 +2,20 @@
   "name": "@perfma/StoreViewModel",
   "version": "0.1.0",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "jest",
-    "eject": "react-scripts eject"
+    "build": "bell-scripts build",
+    "version": "npm run build",
+    "prepublishOnly": "npm version patch && git push",
+    "release": "npm run build && npm publish",
+    "test": "jest"
+  },
+  "module": "dist/esm/index.js",
+  "main": "dist/cjs/index.js",
+  "typings": "dist/esm/index.d.ts",
+  "bell": {
+    "projectType": [
+      "component",
+      "pbc"
+    ]
   },
   "engines": {
     "node": ">=12"
@@ -33,7 +43,6 @@
       "pre-commit": "yarn run test StoreViewModel.test.ts"
     }
   },
-
   "dependencies": {
     "react-fast-compare": "^3.2.0"
   },
@@ -41,16 +50,17 @@
     "@babel/core": "^7.19.6",
     "@babel/preset-env": "^7.19.4",
     "@babel/preset-typescript": "^7.18.6",
-    "@testing-library/react": "^11.1.0",
+    "@perfma/bell-scripts": "1.0.6",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.2.0",
     "@types/react": "^17.0.21",
     "babel-jest": "^29.2.2",
+    "husky": "^4.3.8",
     "random-value-generator": "^0.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "ts-jest": "^29.0.3",
-    "husky": "^4.3.8"
+    "father": "4.1.0"
   }
 }

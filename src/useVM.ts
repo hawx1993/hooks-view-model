@@ -1,10 +1,10 @@
 function useVM<VM, P, T>(
   ViewModel: new (props: P, context?: T) => VM,
   props: P,
-  context?: T
+  context?: T,
 ) {
   const newProps = Object.assign(props, {
-    name: ViewModel.name,
+    vmName: ViewModel.name,
   });
   const vm = new ViewModel(newProps, context);
   return vm;
