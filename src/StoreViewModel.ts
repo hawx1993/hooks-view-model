@@ -212,13 +212,13 @@ class StoreViewModel<P = {}> {
     const current = currentStore.get(curKey);
     return current?.value || {};
   };
-  public batchUpdateStoreValues = <K>(payload: { key: K; value: any }[]) => {
-    payload.forEach((item) => {
-      this.updateGlobalStoreByKey(item.key, item.value);
-    });
-  };
+  // public batchUpdateGlobalStore = <K>(payload: { key: K; value: any }[]) => {
+  //   payload.forEach((item) => {
+  //     this.updateGlobalStoreByKey(item.key, item.value);
+  //   });
+  // };
 
-  public getStoreValuesByKeys = <K>(keys: K[]) => {
+  public getGlobalStoreByKeys = <K>(keys: K[]) => {
     return keys.map((item) => {
       const current = globalStore.get(item);
       return current?.value || {};

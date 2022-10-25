@@ -58,6 +58,20 @@ class ViewModel extends StoreViewModel {
 }
 ```
 
+### API
+
+- `updateGlobalStoreByKey(key, value)`：根据指定的key，更新全局store；主要用于 `ViewModel`，hooks也可使用，规范上来说不推荐
+- `updateCurrentStore(value)`：无需指定key，即可更新当前view对应的store；主要用于 `ViewModel`，hooks也可使用，规范上来说不推荐
+- `useGlobalStore(key, initialState?)`：根据指定的key，响应`updateGlobalStoreByKey` 的更新；主要用于hooks中
+- `useCurrentStore(initialState?)`：获取当前的store，响应`updateCurrentStore` 的更新，可传入初始状态，类似`useState(false)`；主要用于hooks中
+- `getGlobalStoreByKey(key)`：根据指定的key获取全局store，主要用于`ViewModel`，hooks也可使用，规范上来说不推荐
+- `getCurrentStore`：获取当前store，无需指定key，主要用于`ViewModel`，hooks也可使用，规范上来说不推荐
+
+补充api：
+
+- getGlobalStoreByKeys([...keys])：由一组key组成的数组，获取指定的全局store，主要用于`ViewModel`，hooks也可使用，规范上来说不推荐
+
+
 > 本地状态调试：
 
 打开 Chrome 控制台，输入 globalStore，即可查看当前 view 的所有状态.
