@@ -1,85 +1,118 @@
 import { SetStateAction, useState, Dispatch, useEffect } from 'react';
 import isEqual from 'react-fast-compare';
 
-export enum GLOBAL_KEYS {
-  LICENSE = 'license',
-}
-
 const INCOMING_STORE_KEY = 'INCOMING_STORE_KEY';
 type StateUpdater<ValueType> = (value: ValueType) => void;
 
 const globalStore = new Map();
+const currentStore = new Map();
 const incomingStore = new Map();
 
+enum STORE_TYPE {
+  GLOBAL_STORE = 'global_store',
+  CURRENT_STORE = 'current_store',
+}
 // TODO: add useLocalStore for persist data
-/* eslint-disable */
-class StoreViewModel<P = { name?: string }> {
+class StoreViewModel<P = { name: string }> {
   props: P;
 
   constructor(props: P) {
     // const { getVM } = props;
-    console.log('StoreViewModel', props);
     this.props = props;
   }
-
-  private _setStoreValue = <ValueType>(
-    key: GLOBAL_KEYS,
+  private _setCurrentStoreValue = <K, ValueType>(
+    key,
+    defaultValue?: ValueType
+  ) => {
+    if (!currentStore.has(key)) {
+      currentStore.set(key, {
+        value: defaultValue,
+        updaters: new Set<Dispatch<SetStateAction<K>>>(),
+      });
+    }
+  };
+  private _setGlobalStoreValue = <K, ValueType>(
+    key,
     defaultValue?: ValueType
   ) => {
     if (!globalStore.has(key)) {
       globalStore.set(key, {
         value: defaultValue,
-        updaters: new Set<Dispatch<SetStateAction<GLOBAL_KEYS>>>(),
+        updaters: new Set<Dispatch<SetStateAction<K>>>(),
       });
     }
   };
-
-  private _getStoreValue = <ValueType>(
-    key: GLOBAL_KEYS,
+  private _setStoreValue = <K, ValueType>(
+    key: K,
+    type: STORE_TYPE,
     defaultValue?: ValueType
   ) => {
-    this._setStoreValue(key, defaultValue);
-    return globalStore.get(key);
-  };
-
-  private _updatedStoreValue = <ValueType>(
-    key: GLOBAL_KEYS,
-    value: ValueType
-  ) => {
-    const current = this._getStoreValue(key);
-    if (isEqual(current.value, value)) return;
-    globalStore.set(key, {
-      value: {
-        ...current.value,
-        ...value,
-      },
-      updaters: current.updaters,
-    });
-    current.value = value;
-  };
-
-  private _setDefaultValue = <ValueType>(
-    key: GLOBAL_KEYS,
-    value?: ValueType
-  ) => {
-    const current = this._getStoreValue(key);
-    if (current.value === undefined && value !== undefined) {
-      this._updatedStoreValue(key, value);
+    if (type === STORE_TYPE.CURRENT_STORE) {
+      this._setCurrentStoreValue(key, defaultValue);
+    } else {
+      this._setGlobalStoreValue(key, defaultValue);
     }
   };
 
-  private _emitUpdate = <ValueType = any>(key: GLOBAL_KEYS) => {
-    const current = this._getStoreValue<ValueType>(key);
-    console.log('_emitUpdate', current.updaters);
-    current.updaters.forEach(
-      (listener: Dispatch<SetStateAction<GLOBAL_KEYS>>) => {
-        listener(current.value);
-      }
-    );
+  private _getStoreValue = <K, ValueType>(
+    key: K,
+    type: STORE_TYPE,
+    defaultValue?: ValueType
+  ) => {
+    this._setStoreValue(key, type, defaultValue);
+    if (type === STORE_TYPE.CURRENT_STORE) {
+      return currentStore.get(key);
+    }
+    return globalStore.get(key);
+  };
+
+  private _updatedStoreValue = <K, ValueType>(
+    key: K,
+    value: ValueType,
+    type: STORE_TYPE
+  ) => {
+    const current = this._getStoreValue(key, type);
+    if (isEqual(current.value, value)) return;
+    if (type === STORE_TYPE.CURRENT_STORE) {
+      currentStore.set(key, {
+        value: {
+          ...current.value,
+          ...value,
+        },
+        updaters: current.updaters,
+      });
+    } else {
+      globalStore.set(key, {
+        value: {
+          ...current.value,
+          ...value,
+        },
+        updaters: current.updaters,
+      });
+    }
+    current.value = value;
+  };
+
+  private _setDefaultValue = <K, ValueType>(
+    key: K,
+    type: STORE_TYPE,
+    value?: ValueType
+  ) => {
+    const current = this._getStoreValue(key, type);
+    if (current.value === undefined && value !== undefined) {
+      this._updatedStoreValue(key, value, type);
+    }
+  };
+
+  private _emitUpdate = <K, ValueType = any>(key: K, type: STORE_TYPE) => {
+    const current = this._getStoreValue<K, ValueType>(key, type);
+    current.updaters.forEach((listener: Dispatch<SetStateAction<K>>) => {
+      listener(current.value);
+    });
   };
   // 根据key全局更新store
-  public updateGlobalStoreByKey = <ValueType = any>(
-    key: GLOBAL_KEYS,
+  public updateGlobalStoreByKey = <K, ValueType = any>(
+    key: K,
     incomingValue: ValueType
   ) => {
     const lastIncomingValue = incomingStore.get(INCOMING_STORE_KEY);
@@ -88,39 +121,48 @@ class StoreViewModel<P = { name?: string }> {
     // } else {
     //   return;
     // }
-    this._updatedStoreValue<ValueType>(key, incomingValue);
-    this._emitUpdate<ValueType>(key);
+    this._updatedStoreValue<K, ValueType>(
+      key,
+      incomingValue,
+      STORE_TYPE.GLOBAL_STORE
+    );
+    this._emitUpdate<K, ValueType>(key, STORE_TYPE.GLOBAL_STORE);
   };
 
-  private _getStateUpdater = <ValueType>(
-    key: GLOBAL_KEYS
+  private _getStateUpdater = <K, ValueType>(
+    key: K
   ): StateUpdater<ValueType> => {
     return (incomingValue: ValueType) => {
-      this.updateGlobalStoreByKey<ValueType>(key, incomingValue);
+      this.updateGlobalStoreByKey<K, ValueType>(key, incomingValue);
     };
   };
   // updateStoreByKey
   public updateCurrentStore = <ValueType = any>(incomingValue: ValueType) => {
-    const key = this.props.name;
+    const key = (this.props as any).name;
     const lastIncomingValue = incomingStore.get(INCOMING_STORE_KEY);
     // if (!isEqual(lastIncomingValue, incomingValue)) {
     //   incomingStore.set(INCOMING_STORE_KEY, incomingValue);
     // } else {
     //   return;
     // }
-    console.log('updateCurrentStore2');
-    this._updatedStoreValue<ValueType>(key, incomingValue);
-    this._emitUpdate<ValueType>(key);
+    this._updatedStoreValue<typeof key, ValueType>(
+      key,
+      incomingValue,
+      STORE_TYPE.CURRENT_STORE
+    );
+    this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STORE);
   };
 
-  public useGlobalStore = <State>(key: GLOBAL_KEYS, initialState?: State) => {
-    this._setDefaultValue(key, initialState);
-    const current = this._getStoreValue(key, initialState);
+  public useGlobalStore = <K, State>(key: K, initialState?: State) => {
+    this._setDefaultValue(key, STORE_TYPE.GLOBAL_STORE, initialState);
+    const current = this._getStoreValue(
+      key,
+      STORE_TYPE.GLOBAL_STORE,
+      initialState
+    );
     const state = useState(current.value);
-    const listeners = {} as {
-      [StateKey in GLOBAL_KEYS]: Set<Dispatch<SetStateAction<GLOBAL_KEYS>>>;
-    };
-    globalStore.forEach((value, key: GLOBAL_KEYS) => {
+    const listeners = {} as any;
+    globalStore.forEach((value, key: K) => {
       listeners[key] = new Set();
     });
     useEffect(() => {
@@ -136,16 +178,17 @@ class StoreViewModel<P = { name?: string }> {
 
   // useGlobalStore
   public useCurrentStore = <State>(initialState?: State) => {
-    const key = this.props.name;
-    this._setDefaultValue(key, initialState);
-    const current = this._getStoreValue(key, initialState);
-    console.log('_getStoreValue', current);
+    const key = (this.props as any).name;
+    this._setDefaultValue(key, STORE_TYPE.CURRENT_STORE, initialState);
+    const current = this._getStoreValue(
+      key,
+      STORE_TYPE.CURRENT_STORE,
+      initialState
+    );
     const state = useState(current.value);
-    const listeners = {} as {
-      [StateKey in GLOBAL_KEYS]: Set<Dispatch<SetStateAction<GLOBAL_KEYS>>>;
-    };
-    globalStore.forEach((value, globalKey: GLOBAL_KEYS) => {
-      listeners[globalKey] = new Set();
+    const listeners = {} as any;
+    currentStore.forEach((value, curKey: typeof key) => {
+      listeners[curKey] = new Set();
     });
     useEffect(() => {
       const cleanup = () => {
@@ -158,24 +201,22 @@ class StoreViewModel<P = { name?: string }> {
     return [current?.value || {}, this._getStateUpdater(key)];
   };
 
-  public getGlobalStoreByKey = (key: GLOBAL_KEYS) => {
+  public getGlobalStoreByKey = <K>(key: K) => {
     const current = globalStore.get(key);
     return current?.value || {};
   };
   public getCurrentStore = () => {
-    const key = this.props.name;
-    const current = globalStore.get(key);
+    const curKey = (this.props as any).name;
+    const current = currentStore.get(curKey);
     return current?.value || {};
   };
-  public batchUpdateStoreValues = (
-    payload: { key: GLOBAL_KEYS; value: any }[]
-  ) => {
+  public batchUpdateStoreValues = <K>(payload: { key: K; value: any }[]) => {
     payload.forEach(item => {
       this.updateGlobalStoreByKey(item.key, item.value);
     });
   };
 
-  public getStoreValuesByKeys = (keys: GLOBAL_KEYS[]) => {
+  public getStoreValuesByKeys = <K>(keys: K[]) => {
     return keys.map(item => {
       const current = globalStore.get(item);
       return current?.value || {};
@@ -183,6 +224,9 @@ class StoreViewModel<P = { name?: string }> {
   };
 }
 
-(global as any).globalStore = globalStore;
+(global as any).globalStore = {
+  globalStore,
+  currentStore,
+};
 
-export default StoreViewModel;
+export { StoreViewModel };
