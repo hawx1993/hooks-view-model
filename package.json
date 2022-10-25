@@ -1,6 +1,6 @@
 {
   "name": "@perfma/StoreViewModel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "bell-scripts build",
     "version": "npm run build",
