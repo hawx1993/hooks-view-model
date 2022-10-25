@@ -1,4 +1,3 @@
-import React from 'react';
 import { useVM } from '../../../src/useVM';
 import { FooterViewModel } from './Footer.ViewModel';
 
@@ -8,14 +7,11 @@ export default function Footer() {
     count: 0,
   });
   const { count } = footerData;
-  console.log('footer-Data', footerData);
-  return (
-    <div style={{ border: '1px solid red' }}>
-      <p>Footer ：</p>
-      <p>count: {count}</p>
-      <button onClick={() => updateCount(count + 1)}>+</button>
-    </div>
-  );
+  const incrementFooterCount = () => updateCount(count + 1);
+  return {
+    count,
+    incrementFooterCount,
+  };
 }
 // 1、不同的key，数据不会互相影响，store a update， store b不会更新
 // 2、×数据更新之后，教上次无变化， 则组件不更新

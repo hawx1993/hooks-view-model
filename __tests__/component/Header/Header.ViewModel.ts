@@ -1,7 +1,6 @@
 import StoreViewModel from '../../../src/StoreViewModel';
 import { GLOBAL_KEYS } from '../types';
-const random = require('random-value-generator');
-
+import { COMPLEX_DATA } from '../constants';
 class HeaderViewModel extends StoreViewModel<any> {
   updateCount = count => {
     this.updateGlobalStoreByKey(GLOBAL_KEYS.HEADER, {
@@ -10,19 +9,10 @@ class HeaderViewModel extends StoreViewModel<any> {
   };
   changeData = () => {
     this.updateGlobalStoreByKey(GLOBAL_KEYS.HEADER, {
-      randomData: {
-        address: random.randomHash(66),
-        number: random.randomNumber(99999),
-        array: [
-          random.randomNumber(2),
-          random.randomNumber(3),
-          random.randomNumber(4),
-        ],
-      },
+      complexData: COMPLEX_DATA,
     });
   };
   changeHeaderData = count => {
-    console.log('changeHeaderData', count);
     this.updateCurrentStore({
       headCount: count,
     });
