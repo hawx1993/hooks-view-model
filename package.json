@@ -1,5 +1,5 @@
 {
-  "name": "@perfma/StoreViewModel",
+  "name": "@perfma/store-view-model",
   "version": "0.1.2",
   "scripts": {
     "build": "bell-scripts build",
@@ -19,6 +19,11 @@
   },
   "engines": {
     "node": ">=12"
+  },
+  "publishConfig": {
+    "ignore": [
+      "src/"
+    ]
   },
   "browserslist": {
     "production": [
@@ -41,8 +46,7 @@
     "react": ">=17.0.2"
   },
   "dependencies": {
-    "react-fast-compare": "^3.2.0",
-    "react": "^17.0.2"
+    "react-fast-compare": "^3.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.6",
@@ -53,6 +57,7 @@
     "@types/jest": "^29.2.0",
     "@types/react": "^17.0.21",
     "babel-jest": "^29.2.2",
+    "react": "^17.0.2",
     "father": "4.1.0",
     "husky": "^4.3.8",
     "react-scripts": "4.0.3",
