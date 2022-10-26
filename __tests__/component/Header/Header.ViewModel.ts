@@ -3,12 +3,12 @@ import { GLOBAL_KEYS } from '../types';
 import { COMPLEX_DATA } from '../constants';
 class HeaderViewModel extends StoreViewModel<any> {
   updateCount = (count) => {
-    this.updateGlobalStoreByKey(GLOBAL_KEYS.HEADER, {
+    this.updateGlobalStateByKey(GLOBAL_KEYS.HEADER, {
       count,
     });
   };
   changeData = () => {
-    this.updateGlobalStoreByKey(GLOBAL_KEYS.HEADER, {
+    this.updateGlobalStateByKey(GLOBAL_KEYS.HEADER, {
       complexData: COMPLEX_DATA,
     });
   };
@@ -17,12 +17,12 @@ class HeaderViewModel extends StoreViewModel<any> {
     age?: number;
     height?: number;
   }) => {
-    this.updateCurrentStore({
+    this.updateCurrentState({
       person,
     });
   };
   changeHeaderData = (count) => {
-    this.updateCurrentStore({
+    this.updateCurrentState({
       headCount: count,
     });
   };

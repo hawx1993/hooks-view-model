@@ -3,8 +3,8 @@ import StoreViewModel from './../../src/';
 import { GLOBAL_KEYS } from './types';
 
 export default function Body() {
-  const { useGlobalStore } = useVM(StoreViewModel, {});
-  const [bodyData] = useGlobalStore(GLOBAL_KEYS.HEADER, {});
+  const { useGlobalState } = useVM(StoreViewModel, {});
+  const [bodyData] = useGlobalState(GLOBAL_KEYS.HEADER, {});
   const { count, complexData } = bodyData;
   console.log('body-Data', bodyData);
   return {

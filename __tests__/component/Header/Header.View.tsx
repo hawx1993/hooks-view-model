@@ -7,12 +7,12 @@ export default function Header() {
     updateCount,
     changeData,
     changeHeaderData,
-    useGlobalStore,
+    useGlobalState,
     updatePersonInfo,
-    useCurrentStore,
+    useCurrentState,
   } = useVM(HeaderViewModel, {});
-  const [data] = useGlobalStore(GLOBAL_KEYS.HEADER, { count: 0 });
-  const [headerData] = useCurrentStore({
+  const [data] = useGlobalState(GLOBAL_KEYS.HEADER, { count: 0 });
+  const [headerData] = useCurrentState({
     headCount: 0,
     person: { name: '', age: 0, height: 0 },
   });

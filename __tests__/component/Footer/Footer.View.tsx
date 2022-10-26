@@ -2,8 +2,8 @@ import { useVM } from '../../../src/useVM';
 import { FooterViewModel } from './Footer.ViewModel';
 
 export default function Footer() {
-  const { useCurrentStore, updateCount } = useVM(FooterViewModel, {});
-  const [footerData] = useCurrentStore({
+  const { useCurrentState, updateCount } = useVM(FooterViewModel, {});
+  const [footerData] = useCurrentState({
     count: 0,
   });
   const { count } = footerData;
