@@ -1,5 +1,6 @@
 import { SetStateAction, useState, Dispatch, useEffect } from 'react';
 import isEqual from 'react-fast-compare';
+import store from 'store';
 
 const INCOMING_STORE_KEY = 'INCOMING_STORE_KEY';
 type StateUpdater<ValueType> = (value: ValueType) => void;
@@ -10,8 +11,8 @@ const globalStore = new Map();
 const incomingStore = new Map();
 
 enum STORE_TYPE {
-  GLOBAL_STORE = 'global_store',
-  CURRENT_STORE = 'current_store',
+  GLOBAL_STATE = 'global_state',
+  CURRENT_STATE = 'current_state',
 }
 // TODO: add useLocalStore for persist data
 type StoreViewModelProps = {
@@ -50,7 +51,7 @@ class StoreViewModel<P = {}> {
     type: STORE_TYPE,
     defaultValue?: ValueType,
   ) => {
-    if (type === STORE_TYPE.CURRENT_STORE) {
+    if (type === STORE_TYPE.CURRENT_STATE) {
       this._setCurrentStateValue(key, defaultValue);
     } else {
       this._setGlobalStateValue(key, defaultValue);
@@ -63,7 +64,7 @@ class StoreViewModel<P = {}> {
     defaultValue?: ValueType,
   ) => {
     this._setStoreValue(key, type, defaultValue);
-    if (type === STORE_TYPE.CURRENT_STORE) {
+    if (type === STORE_TYPE.CURRENT_STATE) {
       return currentState.get(key);
     }
     return globalState.get(key);
@@ -101,7 +102,7 @@ class StoreViewModel<P = {}> {
   ) => {
     const current = this._getStoreValue(key, type);
     if (isEqual(current.value, value)) return;
-    if (type === STORE_TYPE.CURRENT_STORE) {
+    if (type === STORE_TYPE.CURRENT_STATE) {
       this._updateCurrentStoreValue(key, current, value);
     } else {
       this._updateGlobalStoreValue(key, current, value);
@@ -140,9 +141,9 @@ class StoreViewModel<P = {}> {
     this._updatedStateValue<K, ValueType>(
       key,
       incomingValue,
-      STORE_TYPE.GLOBAL_STORE,
+      STORE_TYPE.GLOBAL_STATE,
     );
-    this._emitUpdate<K, ValueType>(key, STORE_TYPE.GLOBAL_STORE);
+    this._emitUpdate<K, ValueType>(key, STORE_TYPE.GLOBAL_STATE);
   };
   private _cleanStore = (store, key) => {
     try {
@@ -174,16 +175,16 @@ class StoreViewModel<P = {}> {
     this._updatedStateValue<typeof key, ValueType>(
       key,
       incomingValue,
-      STORE_TYPE.CURRENT_STORE,
+      STORE_TYPE.CURRENT_STATE,
     );
-    this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STORE);
+    this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STATE);
   };
 
   public useGlobalState = <K, State>(key: K, initialState?: State) => {
-    this._setDefaultValue(key, STORE_TYPE.GLOBAL_STORE, initialState);
+    this._setDefaultValue(key, STORE_TYPE.GLOBAL_STATE, initialState);
     const current = this._getStoreValue(
       key,
-      STORE_TYPE.GLOBAL_STORE,
+      STORE_TYPE.GLOBAL_STATE,
       initialState,
     );
     const state = useState(current.value);
@@ -204,10 +205,10 @@ class StoreViewModel<P = {}> {
   // useGlobalStore
   public useCurrentState = <State>(initialState?: State) => {
     const key = this.props.vmName;
-    this._setDefaultValue(key, STORE_TYPE.CURRENT_STORE, initialState);
+    this._setDefaultValue(key, STORE_TYPE.CURRENT_STATE, initialState);
     const current = this._getStoreValue(
       key,
-      STORE_TYPE.CURRENT_STORE,
+      STORE_TYPE.CURRENT_STATE,
       initialState,
     );
     const state = useState(current.value);
@@ -251,12 +252,31 @@ class StoreViewModel<P = {}> {
     if (!globalStore.has(key)) {
       globalStore.set(key, value);
     } else {
-      console.error(key + ' already exists');
+      console.error(key + ' already exists or duplicate function call');
     }
   };
   public getGlobalStoreByKey = <K>(key: K) => {
     const value = globalStore.get(key);
     return value;
+  };
+  // persist store manage
+  public updateGlobalPersistStore = <K, V>(key: K, value: V) => {
+    if (!store.get(key)) {
+      store.set(key, value);
+    } else {
+      console.error(key + ' already exists or duplicate function call');
+    }
+  };
+  public getGlobalPersistStoreByKey = <K>(key: K) => {
+    const value = store.get(key);
+    return value;
+  };
+  public removeGlobalPersistStoreByKey = <K>(key: K) => {
+    if (store.get(key)) {
+      store.remove(key);
+      return true;
+    }
+    return false;
   };
 }
 
