@@ -67,7 +67,32 @@ class StoreViewModel<P = {}> {
     }
     return globalStore.get(key);
   };
-
+  private _updateCurrentStoreValue = <K, ValueType>(
+    key,
+    current,
+    value: ValueType,
+  ) => {
+    currentStore.set(key, {
+      value: {
+        ...current.value,
+        ...value,
+      },
+      updaters: current.updaters,
+    });
+  };
+  private _updateGlobalStoreValue = <K, ValueType>(
+    key: K,
+    current,
+    value: ValueType,
+  ) => {
+    globalStore.set(key, {
+      value: {
+        ...current.value,
+        ...value,
+      },
+      updaters: current.updaters,
+    });
+  };
   private _updatedStoreValue = <K, ValueType>(
     key: K,
     value: ValueType,
@@ -76,21 +101,9 @@ class StoreViewModel<P = {}> {
     const current = this._getStoreValue(key, type);
     if (isEqual(current.value, value)) return;
     if (type === STORE_TYPE.CURRENT_STORE) {
-      currentStore.set(key, {
-        value: {
-          ...current.value,
-          ...value,
-        },
-        updaters: current.updaters,
-      });
+      this._updateCurrentStoreValue(key, current, value);
     } else {
-      globalStore.set(key, {
-        value: {
-          ...current.value,
-          ...value,
-        },
-        updaters: current.updaters,
-      });
+      this._updateGlobalStoreValue(key, current, value);
     }
     current.value = value;
   };
@@ -130,7 +143,17 @@ class StoreViewModel<P = {}> {
     );
     this._emitUpdate<K, ValueType>(key, STORE_TYPE.GLOBAL_STORE);
   };
-
+  private _cleanStore = (store, key) => {
+    try {
+      console.info(`cleaning ${key} currentStore...`, store);
+      store.delete(key);
+      store.size === 0
+        ? console.info(`cleaning ${key} store done`)
+        : console.warn('clean failed');
+    } catch (error) {
+      console.error('cleaning ${key} store failed!', error.message);
+    }
+  };
   private _getStateUpdater = <K, ValueType>(
     key: K,
   ): StateUpdater<ValueType> => {
@@ -169,8 +192,7 @@ class StoreViewModel<P = {}> {
     });
     useEffect(() => {
       const cleanup = () => {
-        console.log(`cleaning ${key} store...`);
-        listeners[key].delete(state[1]);
+        this._cleanStore(globalStore, key);
       };
       return cleanup;
     }, []);
@@ -194,8 +216,7 @@ class StoreViewModel<P = {}> {
     });
     useEffect(() => {
       const cleanup = () => {
-        console.log(`cleaning ${key} store...`);
-        listeners[key].delete(state[1]);
+        this._cleanStore(currentStore, key);
       };
       return cleanup;
     }, []);

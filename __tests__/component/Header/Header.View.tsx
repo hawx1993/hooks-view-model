@@ -8,10 +8,14 @@ export default function Header() {
     changeData,
     changeHeaderData,
     useGlobalStore,
+    updatePersonInfo,
     useCurrentStore,
   } = useVM(HeaderViewModel, {});
   const [data] = useGlobalStore(GLOBAL_KEYS.HEADER, { count: 0 });
-  const [headerData] = useCurrentStore({ headCount: 0 });
+  const [headerData] = useCurrentStore({
+    headCount: 0,
+    person: { name: '', age: 0, height: 0 },
+  });
   const { count, complexData } = data;
   const { headCount } = headerData;
   console.log('Header-data', data, headerData);
@@ -25,5 +29,6 @@ export default function Header() {
     updateHeaderCount,
     changeData,
     complexData,
+    updatePersonInfo,
   };
 }
