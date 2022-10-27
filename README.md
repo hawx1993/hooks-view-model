@@ -17,7 +17,7 @@ View 通过 useVM，把对应的 ViewModel 和 props 作为参数传入，View �
 
 ### 相关文档
 
->详情：https://perfmahz.yuque.com/oar85r/kfrt8s/gm1ehx
+>详情：[https://perfmahz.yuque.com/oar85r/kfrt8s/gm1ehx](https://perfmahz.yuque.com/oar85r/kfrt8s/gm1ehx)
 
 
 
