@@ -2,13 +2,13 @@ import { SetStateAction, useState, Dispatch, useEffect } from 'react';
 import isEqual from 'react-fast-compare';
 import store from 'store';
 
-const INCOMING_STORE_KEY = 'INCOMING_STORE_KEY';
 type StateUpdater<ValueType> = (value: ValueType) => void;
 
 const globalState = new Map();
 const currentState = new Map();
 const globalStore = new Map();
-const incomingStore = new Map();
+const incomingGlobalState = new Map();
+const incomingCurrentState = new Map();
 
 enum STORE_TYPE {
   GLOBAL_STORE = 'global_store',
@@ -129,13 +129,16 @@ abstract class StoreViewModel<P = {}> {
     });
   };
   // 根据key全局更新store
+  /**
+   * 通过key更新全局view 对应的state，view 和 viewModel 适用
+   */
   public updateGlobalStateByKey = <K, ValueType = any>(
     key: K,
     incomingValue: ValueType,
   ) => {
-    const lastIncomingValue = incomingStore.get(INCOMING_STORE_KEY);
+    const lastIncomingValue = incomingGlobalState.get(key);
     if (!isEqual(lastIncomingValue, incomingValue)) {
-      incomingStore.set(INCOMING_STORE_KEY, incomingValue);
+      incomingGlobalState.set(key, incomingValue);
     } else {
       return;
     }
@@ -165,11 +168,14 @@ abstract class StoreViewModel<P = {}> {
     };
   };
   // updateStoreByKey
+  /**
+   * 更新当前view的state，view 和 viewModel 适用
+   */
   public updateCurrentState = <ValueType = any>(incomingValue: ValueType) => {
     const key = this.props.VM_NAME;
-    const lastIncomingValue = incomingStore.get(INCOMING_STORE_KEY);
+    const lastIncomingValue = incomingCurrentState.get(key);
     if (!isEqual(lastIncomingValue, incomingValue)) {
-      incomingStore.set(INCOMING_STORE_KEY, incomingValue);
+      incomingCurrentState.set(key, incomingValue);
     } else {
       return;
     }
@@ -180,7 +186,9 @@ abstract class StoreViewModel<P = {}> {
     );
     this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STORE);
   };
-
+  /**
+   * hooks，获取全局 view 对应的state，仅view 适用
+   */
   public useGlobalState = <K, State>(key: K, initialState?: State) => {
     this._setDefaultValue(key, STORE_TYPE.GLOBAL_STORE, initialState);
     const current = this._getStoreValue(
@@ -195,6 +203,7 @@ abstract class StoreViewModel<P = {}> {
     });
     useEffect(() => {
       const cleanup = () => {
+        incomingGlobalState.delete(key);
         this._cleanStore(globalState, key);
       };
       return cleanup;
@@ -204,6 +213,9 @@ abstract class StoreViewModel<P = {}> {
   };
 
   // useGlobalStore
+  /**
+   * hooks，获取当前view 对应的state，仅view 适用
+   */
   public useCurrentState = <State>(initialState?: State) => {
     const key = this.props.VM_NAME;
     this._setDefaultValue(key, STORE_TYPE.CURRENT_STORE, initialState);
@@ -219,6 +231,7 @@ abstract class StoreViewModel<P = {}> {
     });
     useEffect(() => {
       const cleanup = () => {
+        incomingCurrentState.delete(key);
         this._cleanStore(currentState, key);
       };
       return cleanup;
@@ -226,22 +239,24 @@ abstract class StoreViewModel<P = {}> {
     current.updaters.add(state[1]);
     return [current?.value || {}, this._getStateUpdater(key)];
   };
-
+  /**
+   * 通过key获取全局state，view和viewModel 适用
+   */
   public getGlobalStateByKey = <K>(key: K) => {
     const current = globalState.get(key);
     return current?.value || {};
   };
+  /**
+   * 获取当前state，view和viewModel 适用
+   */
   public getCurrentState = () => {
     const curKey = this.props.VM_NAME;
     const current = currentState.get(curKey);
     return current?.value || {};
   };
-  // public batchUpdateGlobalStore = <K>(payload: { key: K; value: any }[]) => {
-  //   payload.forEach((item) => {
-  //     this.updateGlobalStoreByKey(item.key, item.value);
-  //   });
-  // };
-
+  /**
+   * 通过keys数组获取全局状态值
+   */
   public getGlobalStateByKeys = <K>(keys: K[]) => {
     return keys.map((item) => {
       const current = globalState.get(item);
@@ -249,6 +264,9 @@ abstract class StoreViewModel<P = {}> {
     });
   };
   // store manage 变量存储
+  /**
+   * 通过key 更新全局变量存储
+   */
   public updateGlobalStore = <K, V>(key: K, value: V) => {
     if (!globalStore.has(key)) {
       globalStore.set(key, value);
@@ -256,11 +274,17 @@ abstract class StoreViewModel<P = {}> {
       console.error(key + ' already exists or duplicate function call');
     }
   };
+  /**
+   * 通过key获取全局变量存储
+   */
   public getGlobalStoreByKey = <K>(key: K) => {
     const value = globalStore.get(key);
     return value;
   };
   // persist store manage
+  /**
+   * 更新全局持久化存储
+   */
   public updateGlobalPersistStore = <K, V>(key: K, value: V) => {
     if (!store.get(key)) {
       store.set(key, value);
@@ -268,10 +292,16 @@ abstract class StoreViewModel<P = {}> {
       console.error(key + ' already exists or duplicate function call');
     }
   };
+  /**
+   * 通过key获取全局持久化存储
+   */
   public getGlobalPersistStoreByKey = <K>(key: K) => {
     const value = store.get(key);
     return value;
   };
+  /**
+   * 通过key移除全局持久化存储
+   */
   public removeGlobalPersistStoreByKey = <K>(key: K) => {
     if (store.get(key)) {
       store.remove(key);
