@@ -11,8 +11,8 @@ const incomingGlobalState = new Map();
 const incomingCurrentState = new Map();
 
 enum STORE_TYPE {
-  GLOBAL_STORE = 'global_store',
-  CURRENT_STORE = 'current_store',
+  GLOBAL_STATE = 'global_state',
+  CURRENT_STATE = 'current_state',
 }
 // TODO: add useLocalStore for persist data
 type StoreViewModelProps = {
@@ -52,7 +52,7 @@ abstract class StoreViewModel<P = {}> {
     type: STORE_TYPE,
     defaultValue?: ValueType,
   ) => {
-    if (type === STORE_TYPE.CURRENT_STORE) {
+    if (type === STORE_TYPE.CURRENT_STATE) {
       this._setCurrentStateValue(key, defaultValue);
     } else {
       this._setGlobalStateValue(key, defaultValue);
@@ -65,7 +65,7 @@ abstract class StoreViewModel<P = {}> {
     defaultValue?: ValueType,
   ) => {
     this._setStateValue(key, type, defaultValue);
-    if (type === STORE_TYPE.CURRENT_STORE) {
+    if (type === STORE_TYPE.CURRENT_STATE) {
       return currentState.get(key);
     }
     return globalState.get(key);
@@ -103,7 +103,7 @@ abstract class StoreViewModel<P = {}> {
   ) => {
     const current = this._getStoreValue(key, type);
     if (isEqual(current.value, value)) return;
-    if (type === STORE_TYPE.CURRENT_STORE) {
+    if (type === STORE_TYPE.CURRENT_STATE) {
       this._updateCurrentStoreValue(key, current, value);
     } else {
       this._updateGlobalStoreValue(key, current, value);
@@ -131,6 +131,7 @@ abstract class StoreViewModel<P = {}> {
   // 根据key全局更新store
   /**
    * 通过key更新全局view 对应的state，view 和 viewModel 适用
+   * 参数：updateGlobalStateByKey(key, value)
    */
   public updateGlobalStateByKey = <K, ValueType = any>(
     key: K,
@@ -145,9 +146,9 @@ abstract class StoreViewModel<P = {}> {
     this._updatedStateValue<K, ValueType>(
       key,
       incomingValue,
-      STORE_TYPE.GLOBAL_STORE,
+      STORE_TYPE.CURRENT_STATE,
     );
-    this._emitUpdate<K, ValueType>(key, STORE_TYPE.GLOBAL_STORE);
+    this._emitUpdate<K, ValueType>(key, STORE_TYPE.CURRENT_STATE);
   };
   private _cleanStore = (store, key) => {
     try {
@@ -170,6 +171,7 @@ abstract class StoreViewModel<P = {}> {
   // updateStoreByKey
   /**
    * 更新当前view的state，view 和 viewModel 适用
+   * 参数：updateCurrentState(value)
    */
   public updateCurrentState = <ValueType = any>(incomingValue: ValueType) => {
     const key = this.props.VM_NAME;
@@ -182,18 +184,19 @@ abstract class StoreViewModel<P = {}> {
     this._updatedStateValue<typeof key, ValueType>(
       key,
       incomingValue,
-      STORE_TYPE.CURRENT_STORE,
+      STORE_TYPE.CURRENT_STATE,
     );
-    this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STORE);
+    this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STATE);
   };
   /**
    * hooks，获取全局 view 对应的state，仅view 适用
+   * 参数：useGlobalState(key, initialState?)
    */
   public useGlobalState = <K, State>(key: K, initialState?: State) => {
-    this._setDefaultValue(key, STORE_TYPE.GLOBAL_STORE, initialState);
+    this._setDefaultValue(key, STORE_TYPE.CURRENT_STATE, initialState);
     const current = this._getStoreValue(
       key,
-      STORE_TYPE.GLOBAL_STORE,
+      STORE_TYPE.CURRENT_STATE,
       initialState,
     );
     const state = useState(current.value);
@@ -214,14 +217,15 @@ abstract class StoreViewModel<P = {}> {
 
   // useGlobalStore
   /**
-   * hooks，获取当前view 对应的state，仅view 适用
+   * hooks，获取当前view 对应的state，仅view 适用；
+   * 参数：useCurrentState(initialState)
    */
   public useCurrentState = <State>(initialState?: State) => {
     const key = this.props.VM_NAME;
-    this._setDefaultValue(key, STORE_TYPE.CURRENT_STORE, initialState);
+    this._setDefaultValue(key, STORE_TYPE.CURRENT_STATE, initialState);
     const current = this._getStoreValue(
       key,
-      STORE_TYPE.CURRENT_STORE,
+      STORE_TYPE.CURRENT_STATE,
       initialState,
     );
     const state = useState(current.value);
@@ -240,14 +244,16 @@ abstract class StoreViewModel<P = {}> {
     return [current?.value || {}, this._getStateUpdater(key)];
   };
   /**
-   * 通过key获取全局state，view和viewModel 适用
+   * 通过key获取全局state，view和viewModel 适用;
+   * 参数：getGlobalStateByKey(key)
    */
   public getGlobalStateByKey = <K>(key: K) => {
     const current = globalState.get(key);
     return current?.value || {};
   };
   /**
-   * 获取当前state，view和viewModel 适用
+   * 获取当前state，view和viewModel 适用；
+   * 参数：getCurrentState()
    */
   public getCurrentState = () => {
     const curKey = this.props.VM_NAME;
@@ -256,6 +262,7 @@ abstract class StoreViewModel<P = {}> {
   };
   /**
    * 通过keys数组获取全局状态值
+   * 参数：getGlobalStateByKeys([key1,key2])
    */
   public getGlobalStateByKeys = <K>(keys: K[]) => {
     return keys.map((item) => {
@@ -266,6 +273,7 @@ abstract class StoreViewModel<P = {}> {
   // store manage 变量存储
   /**
    * 通过key 更新全局变量存储
+   * 参数：updateGlobalStore(key, value)
    */
   public updateGlobalStore = <K, V>(key: K, value: V) => {
     if (!globalStore.has(key)) {
@@ -276,6 +284,7 @@ abstract class StoreViewModel<P = {}> {
   };
   /**
    * 通过key获取全局变量存储
+   * 参数：getGlobalStoreByKey(key)
    */
   public getGlobalStoreByKey = <K>(key: K) => {
     const value = globalStore.get(key);
@@ -284,6 +293,7 @@ abstract class StoreViewModel<P = {}> {
   // persist store manage
   /**
    * 更新全局持久化存储
+   * 参数：updateGlobalPersistStore(key,value)
    */
   public updateGlobalPersistStore = <K, V>(key: K, value: V) => {
     if (!store.get(key)) {
@@ -294,6 +304,7 @@ abstract class StoreViewModel<P = {}> {
   };
   /**
    * 通过key获取全局持久化存储
+   * 参数：getGlobalPersistStoreByKey(key)
    */
   public getGlobalPersistStoreByKey = <K>(key: K) => {
     const value = store.get(key);
@@ -301,6 +312,7 @@ abstract class StoreViewModel<P = {}> {
   };
   /**
    * 通过key移除全局持久化存储
+   * 参数：removeGlobalPersistStoreByKey(key)
    */
   public removeGlobalPersistStoreByKey = <K>(key: K) => {
     if (store.get(key)) {
@@ -309,9 +321,14 @@ abstract class StoreViewModel<P = {}> {
     }
     return false;
   };
-  // hooks autorun on hooks mounted
+  /**
+   * 钩子函数，组件挂载时自动执行
+   */
   mounted = () => {};
-  // hooks autorun on hooks unmounted
+
+  /**
+   * 钩子函数，组件卸载时自动执行
+   */
   unmounted = () => {};
 }
 
