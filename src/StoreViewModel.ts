@@ -290,12 +290,19 @@ abstract class StoreViewModel<P = {}> {
     const value = globalStore.get(key);
     return value;
   };
+  /**
+   * 通过key 移除全局变量存储，返回布尔值
+   * 参数：removeGlobalStoreByKey(key)
+   */
+  public removeGlobalStoreByKey = <K>(key: K): boolean => {
+    return globalStore.delete(key);
+  };
   // persist store manage
   /**
-   * 更新全局持久化存储
+   * 更新全局持久化存储，返回void
    * 参数：updateGlobalPersistStore(key,value)
    */
-  public updateGlobalPersistStore = <K, V>(key: K, value: V) => {
+  public updateGlobalPersistStore = <K, V>(key: K, value: V): void => {
     if (!store.get(key)) {
       store.set(key, value);
     } else {
