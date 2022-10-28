@@ -337,6 +337,11 @@ abstract class StoreViewModel<P = {}> {
    * 钩子函数，组件卸载时自动执行
    */
   unmounted = () => {};
+
+  /**
+   * 内置函数，接收props时触发
+   */
+  onReceiveProps?(props: P): void;
 }
 
 (global as any).globalStore = {

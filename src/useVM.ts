@@ -14,6 +14,12 @@ function useVM<VM extends StoreViewModel<P>, P, T>(
     };
     return new ViewModel(newProps, context);
   });
+  useEffect(() => {
+    if (vm?.onReceiveProps) {
+      vm.onReceiveProps(props);
+    }
+    Object.assign(vm, { ...props });
+  }, [props]);
 
   useEffect(() => {
     vm.mounted();
