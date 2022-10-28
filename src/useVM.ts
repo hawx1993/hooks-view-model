@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { randomString } from './utils';
 import StoreViewModel from './StoreViewModel';
 
 function useVM<VM extends StoreViewModel<P>, P, T>(
@@ -6,8 +7,13 @@ function useVM<VM extends StoreViewModel<P>, P, T>(
   props: P,
   context?: T,
 ) {
-  const newProps = { ...props, VM_NAME: ViewModel.name };
-  let [vm] = useState(() => new ViewModel(newProps, context));
+  let [vm] = useState(() => {
+    const newProps = {
+      ...props,
+      VM_NAME: `${ViewModel.name}-${randomString(4)}`,
+    };
+    return new ViewModel(newProps, context);
+  });
 
   useEffect(() => {
     vm.mounted();

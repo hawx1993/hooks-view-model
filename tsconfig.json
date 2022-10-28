@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "downlevelIteration": true,
     "declaration": true,
+    "jsx": "react"
   },
   "exclude": [
       "node_modules",

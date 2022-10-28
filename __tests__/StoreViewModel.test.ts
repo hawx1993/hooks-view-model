@@ -3,6 +3,7 @@ import Header from './component/Header';
 import Footer from './component/Footer';
 import Body from './component/Body';
 import { COMPLEX_DATA } from './component/constants';
+jest.mock('nanoid');
 
 test('when call updateHeaderCount,globalHeaderData should return correct value', () => {
   const { result } = renderHook(() => Header());
