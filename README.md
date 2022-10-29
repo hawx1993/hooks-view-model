@@ -1,6 +1,6 @@
-# hooks-store-view-model
+# hooks-view-model
 
-`hooks-store-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-store-view-model将带来如下诸多便利：
+`hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
 
 - 提供全局与局部state管理；
 - 提供全局变量与持久化数据管理；
@@ -17,13 +17,13 @@
 
 由上图可知，顾名思义，ViewModel就是用来处理数据绑定和dom 事件监听的。
 
-基于`hooks-store-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-store-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
+基于`hooks-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
 
 ### 快速使用
 
 ```bash
-$ yarn add hooks-store-view-model
-import StoreViewModel, { useVM } from 'hooks-store-view-model'
+$ yarn add hooks-view-model
+import StoreViewModel, { useVM } from 'hooks-view-model'
 ```
 ### 为什么要研发这个解决方案？
 
@@ -48,7 +48,7 @@ import StoreViewModel, { useVM } from 'hooks-store-view-model'
 ```tsx
 // AppView.tsx
 import { AppViewModel } from './AppViewModel'
-import { useVM } from 'hooks-store-view-model'
+import { useVM } from 'hooks-view-model'
 import { GLOBAL_KEYS } from 'app/path/to/globalKeys'
 
 const AppView = () => {
@@ -74,7 +74,7 @@ const AppView = () => {
 
 ```tsx
 // AppViewModel.ts
-import  StoreViewModel from 'hooks-store-view-model'
+import  StoreViewModel from 'hooks-view-model'
 import { GLOBAL_KEYS } from 'app/path/to/globalKeys'
 
 class AppViewModel extends StoreViewModel {
@@ -108,7 +108,7 @@ export { AppViewModel }
 >例子Examples
 
 ```tsx
-import StoreViewModel from 'hooks-store-view-model';
+import StoreViewModel from 'hooks-view-model';
 
 type HeaderVMProps = {
   count: number
@@ -132,7 +132,7 @@ class HeaderViewModel extends StoreViewModel<HeaderVMProps> {
 >例子Examples
 
 ```tsx
-import StoreViewModel from 'hooks-store-view-model';
+import StoreViewModel from 'hooks-view-model';
 
 class HeaderViewModel extends StoreViewModel<any> {
   updatePersonInfo = (person: {
@@ -161,7 +161,7 @@ export { HeaderViewModel };
 
 获取当前state，view和viewModel 适用
 ```tsx
-import StoreViewModel from 'hooks-store-view-model';
+import StoreViewModel from 'hooks-view-model';
 
 class HeaderViewModel extends StoreViewModel<any> {
   changeModule = () => {
@@ -258,7 +258,7 @@ export { FooterViewModel };
 
 
 ```tsx
-import { useVM } from 'hooks-store-view-model';
+import { useVM } from 'hooks-view-model';
 
 export default function Footer() {
   const {
@@ -310,7 +310,7 @@ export { FooterViewModel };
 - initialState：初始化state，类似useState默认值
 
 ```tsx
-import { useVM } from 'hooks-store-view-model';
+import { useVM } from 'hooks-view-model';
 import { AppViewModel } from './App.ViewModel.ts';
 
 export default function App() {
@@ -345,7 +345,7 @@ export default function App() {
 
 
 ```tsx
-import  {  useVM } from 'hooks-store-view-model';
+import  {  useVM } from 'hooks-view-model';
 
 export default function Footer() {
   const {
@@ -384,7 +384,7 @@ export default function Footer() {
 mounted相当于是viewModel的componentDidMount
 
 ```tsx
-import StoreViewModel from 'hooks-store-view-model';
+import StoreViewModel from 'hooks-view-model';
 
 class HeaderViewModel extends StoreViewModel<any> {
   mounted = () => {
@@ -399,7 +399,7 @@ export { HeaderViewModel };
 组件卸载的时候，ViewModel 会自动执行该方法
 
 ```tsx
-import StoreViewModel from 'hooks-store-view-model';
+import StoreViewModel from 'hooks-view-model';
 
 class HeaderViewModel extends StoreViewModel<any> {
   unmounted = () => {
@@ -437,7 +437,7 @@ export { Counter };
 
 ```tsx
 // Counter.ViewModel.ts
-import StoreViewModel from 'hooks-store-view-model';
+import StoreViewModel from 'hooks-view-model';
 
 class CounterViewModel extends StoreViewModel<any> {
   constructor(props) {

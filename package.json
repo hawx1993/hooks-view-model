@@ -1,5 +1,5 @@
 {
-  "name": "hooks-store-view-model",
+  "name": "hooks-view-model",
   "version": "0.1.0",
   "scripts": {
     "build": "npx father  build",
