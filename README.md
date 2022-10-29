@@ -1,11 +1,17 @@
 # hooks-store-view-model
 
-`StoreViewModel`是一种通过拆分UI视图与业务逻辑的解决方案，并提供：
+`hooks-store-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-store-view-model将带来如下诸多便利：
 
-1、提供全局与局部state管理；
-2、提供全局变量与持久化数据管理；
+- 提供全局与局部state管理；
+- 提供全局变量与持久化数据管理；
+- 代码更具有可组织性，可维护性和可测试性，职责划分更清晰
+- 即使多次更新state，state未改变，view也不会re-render，无需手动处理性能优化
+- 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
+- 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
+- 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
+- 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
 
-基于react hooks 实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
+基于`react hooks `实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
 
 <img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
 
@@ -13,6 +19,12 @@
 
 基于`hooks-store-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-store-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
 
+### 快速使用
+
+```bash
+$ yarn add hooks-store-view-model
+import StoreViewModel, { useVM } from 'hooks-store-view-model'
+```
 ### 为什么要研发这个解决方案？
 
 因为基于函数式的hooks组件的写法太过于宽松，久而久之容易写出面条式难以维护的代码， 为了统一规范化不同部门的组件化风格的写法，将所有业务逻辑统一放viewModel中去处理。
