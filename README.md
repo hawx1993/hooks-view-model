@@ -1,19 +1,35 @@
 # hooks-store-view-model
 
-StoreViewModel是一种通过拆分UI视图与业务逻辑的解决方案，并提供全局与局部state管理；提供全局变量与持久化数据管理；
-基于react hooks 实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 useGlobalStore/useCurrentStore 获取数据并主动更新视图。
+`StoreViewModel`是一种通过拆分UI视图与业务逻辑的解决方案，并提供：
+
+1、提供全局与局部state管理；
+2、提供全局变量与持久化数据管理；
+
+基于react hooks 实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
 
 <img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
 
 由上图可知，顾名思义，ViewModel就是用来处理数据绑定和dom 事件监听的。
 
+基于`hooks-store-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-store-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
+
+### 为什么要研发这个解决方案？
+
+因为基于函数式的hooks组件的写法太过于宽松，久而久之容易写出面条式难以维护的代码， 为了统一规范化不同部门的组件化风格的写法，将所有业务逻辑统一放viewModel中去处理。
+
+有了这个解决方案，就不需要hooks了吗？
+
+那肯定不是，其他可公用的hooks依然可以继续使用，只不过业务强相关的没法抽离的逻辑推荐写到ViewModel中，hooks依然可以在函数式组件用引入，返回的值可通过useVM传递给ViewModel去处理
+
 ### 容器方案：View 和 ViewModel
 
 
-首先：AppView  视图组件通过useVM实例化AppViewModel，并获取AppViewModel和StoreViewModel的实例方法；
-其次：AppView 视图组件通过useGlobalState和useCurrentState获取全局和当前页面状态state，其中：
-● useGlobalState 响应来自updateGlobalStateByKey 的更新
-● useCurrentState 响应来自updateCurrentState 的更新
+首先：AppView  视图组件通过useVM实例化AppViewModel，并获取`AppViewModel`和`StoreViewModel`的实例方法；
+
+其次：AppView 视图组件通过`useGlobalState`和`useCurrentState`获取全局和当前页面状态state，其中：
+
+- `useGlobalState` 响应来自`updateGlobalStateByKey` 的更新
+- `useCurrentState` 响应来自`updateCurrentState` 的更新
 
 >View：获取数据并展示数据
 
