@@ -3,12 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
   <img src="https://img.shields.io/github/stars/hawx1993/hooks-view-model" /> 
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/github/forks/hawx1993/hooks-view-model" /> 
-</p>
-<p align="center">
   <img src="https://img.shields.io/github/issues/hawx1993/hooks-view-model" />
 </p>
 
