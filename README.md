@@ -1,9 +1,18 @@
 # hooks-view-model
 
-<img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
-<img src="https://img.shields.io/github/stars/hawx1993/hooks-view-model" />
-<img src="https://img.shields.io/github/forks/hawx1993/hooks-view-model" />
-<img src="https://img.shields.io/github/issues/hawx1993/hooks-view-model" />
+<p align="center">
+  <img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
+  <img src="https://img.shields.io/github/stars/hawx1993/hooks-view-model" /> 
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/forks/hawx1993/hooks-view-model" /> 
+</p>
+<p align="center">
+  <img src="https://img.shields.io/github/issues/hawx1993/hooks-view-model" />
+</p>
+
+
 
 
 `hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
