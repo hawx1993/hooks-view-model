@@ -18,8 +18,9 @@
 - 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
 - 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
 - 🌲 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
-- ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
-- ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
+- 🍳 ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
+- 🍖 ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
+- 🥒 由于函数已经提取到ViewModel，所以无需使用`useCallback` 处理因避免函数引用变动所导致的组件重渲染问题。
 
 
 基于`react hooks `实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。

@@ -20,8 +20,9 @@
 - 🍷 Compared with the native useState hooks, the data is clearer and easier to debug. You can enter `globalStore` in the console to view all state storage information
 - 👋 Can achieve global data update, cross-component data transfer, without `useReducer` or context
 - 🌲 Different stores are divided according to the key, and the view component will not respond to the state change of the unused store, which can cancel the performance overhead.
-- ViewModel will provide basic life cycle functions without frequently introducing useEffect in hooks components for processing
-- ViewModel will automatically trigger memory recycling according to the life cycle of react hooks, and memory management is more planned
+- 🍳 ViewModel will provide basic life cycle functions without frequently introducing useEffect in hooks components for processing
+- 🍖 ViewModel will automatically trigger memory recycling according to the life cycle of react hooks, and memory management is more planned
+- 🥒 Since the function has already been extracted into the ViewModel, there is no need to use `useCallback` to deal with the component re-rendering problem caused by the change of function reference.
 
 
 Based on the implementation of `react hooks`, by splitting the react view and business logic, a real divide and conquer is achieved. View is only responsible for displaying views, ViewModel is responsible for state and data processing, and View obtains data through `useGlobalStore/useCurrentStore` and actively updates the view.
