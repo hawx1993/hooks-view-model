@@ -10,7 +10,7 @@
 </p>
 
 
-`hooks-view-model` is a solution by decouple UI view and business logic. Using `hooks-view-model` will bring the following conveniences:
+`hooks-view-model` is a solution by decouple UI view and business logic for react hooks. Using `hooks-view-model` will bring the following conveniences:
 
 - 💼 Provide global and local state management without introducing state management solutions such as reducer or redux;
 - 🌲 Provide global cache and persistent data storage management;
