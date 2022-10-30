@@ -8,18 +8,19 @@
 </p>
 
 
-
-
 `hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
 
-- 💼 提供全局与局部state管理；
+- 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
 - 🌲 提供全局缓存与持久化数据存储管理；
-- 🎩 代码更具有可组织性，可维护性和可测试性，职责划分更清晰
+- 🎩 业务代码引入该方案，将使业务代码更具有可组织性，可维护性和可测试性，职责划分更清晰，避免面条式写法杂糅一起造成的组件维护性下降，数据处理混乱等问题的出现。
 - 🌂 即使多次更新state，state未改变，view也不会`re-render`，无需手动处理性能优化
 - 🍰 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
 - 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
 - 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
 - 🌲 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
+- ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
+- ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
+
 
 基于`react hooks `实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
 
