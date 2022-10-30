@@ -1,7 +1,5 @@
 # hooks-view-model
 
-[中文文档](./README.zh-cn.md)
-
 <p align="center">
   <img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
   <img src="https://img.shields.io/github/stars/hawx1993/hooks-view-model" /> 
@@ -10,29 +8,31 @@
 </p>
 
 
-`hooks-view-model` is a solution by decouple UI view and business logic. Using `hooks-view-model` will bring the following conveniences:
+`hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
 
-- 💼 Provide global and local state management without introducing state management solutions such as reducer or redux;
-- 🌲 Provide global cache and persistent data storage management;
-- 🎩 The introduction of this solution into business code will make the business code more organized, maintainable and testable, with clearer division of responsibilities, and avoid problems such as reduced component maintainability and chaotic data processing caused by the combination of spaghetti-style writing.
-- 🌂 Even if the state is updated multiple times, the state does not change, the view will not `re-render`, no need to deal with performance optimization manually
-- 🍰 Effectively avoid the problem of too much state in the component that needs to be managed, and simplify the writing of useState and setState in the form of objects.
-- 🍷 Compared with the native useState hooks, the data is clearer and easier to debug. You can enter `globalStore` in the console to view all state storage information
-- 👋 Can achieve global data update, cross-component data transfer, without `useReducer` or context
-- 🌲 Different stores are divided according to the key, and the view component will not respond to the state change of the unused store, which can cancel the performance overhead.
-- ViewModel will provide basic life cycle functions without frequently introducing useEffect in hooks components for processing
-- ViewModel will automatically trigger memory recycling according to the life cycle of react hooks, and memory management is more planned
+- 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
+- 🌲 提供全局缓存与持久化数据存储管理；
+- 🎩 业务代码引入该方案，将使业务代码更具有可组织性，可维护性和可测试性，职责划分更清晰，避免面条式写法杂糅一起造成的组件维护性下降，数据处理混乱等问题的出现。
+- 🌂 即使多次更新state，state未改变，view也不会`re-render`，无需手动处理性能优化
+- 🍰 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
+- 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
+- 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
+- 🌲 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
+- ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
+- ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
 
 
-Based on the implementation of `react hooks`, by splitting the react view and business logic, a real divide and conquer is achieved. View is only responsible for displaying views, ViewModel is responsible for state and data processing, and View obtains data through `useGlobalStore/useCurrentStore` and actively updates the view.
+基于`react hooks `实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
 
 <img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
 
+由上图可知，顾名思义，ViewModel就是用来处理数据绑定和dom 事件监听的。
 
-Based on `hooks-view-model`, there is no need for useCallback, no need for useReducer, no need for technical solutions such as redux. `hooks-view-model` is a solution that integrates state management, variable storage management and persistent data management.
-### Quick Start
+基于`hooks-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
 
-1、install：
+### 快速使用
+
+1、安装：
 ```bash
 $ yarn add hooks-view-model
 ```
@@ -42,25 +42,25 @@ $ yarn add hooks-view-model
 ```ts
 import StoreViewModel, { useVM } from 'hooks-view-model'
 ```
-### Why develop this solution?
+### 为什么要研发这个解决方案？
 
-Because the writing style of the functional hooks component is too loose, it is easy to write spaghetti-style code that is difficult to maintain over time. In order to standardize the writing style of the component style of different departments, all business logic is unified in the viewModel for processing.
+因为基于函数式的hooks组件的写法太过于宽松，久而久之容易写出面条式难以维护的代码， 为了统一规范化不同部门的组件化风格的写法，将所有业务逻辑统一放viewModel中去处理。
 
-1. With this solution there is no need for hooks?
-  
-That is definitely not the case. Other public hooks can still be used, but the logic that is strongly related to the business and cannot be separated is recommended to be written in the ViewModel. The hooks can still be introduced in functional components, and the returned value can be passed to the useVM. ViewModel to handle
+有了这个解决方案，就不需要hooks了吗？
 
-### View and  ViewModel
+那肯定不是，其他可公用的hooks依然可以继续使用，只不过业务强相关的没法抽离的逻辑推荐写到ViewModel中，hooks依然可以在函数式组件用引入，返回的值可通过useVM传递给ViewModel去处理
+
+### 容器方案：View 和 ViewModel
 
 
-First: The AppView view component instantiates the AppViewModel through useVM, and obtains the instance methods of `AppViewModel` and `StoreViewModel`;
+首先：AppView  视图组件通过useVM实例化AppViewModel，并获取`AppViewModel`和`StoreViewModel`的实例方法；
 
-Second: the AppView view component gets the global and current page state state through `useGlobalState` and `useCurrentState`, where:
+其次：AppView 视图组件通过`useGlobalState`和`useCurrentState`获取全局和当前页面状态state，其中：
 
-- `useGlobalState` responds to updates from `updateGlobalStateByKey`
-- `useCurrentState`  responds to updates from `updateCurrentState` 
+- `useGlobalState` 响应来自`updateGlobalStateByKey` 的更新
+- `useCurrentState` 响应来自`updateCurrentState` 的更新
 
->View：Get data and display data
+>View：获取数据并展示数据
 
 ```tsx
 // AppView.tsx
@@ -85,9 +85,9 @@ const AppView = () => {
 
 ```
 
->ViewModel：Manage data, manage state and data
+>ViewModel：处理数据，管理状态和数据
 
-`updateGlobalStateByKey` and  `updateCurrentState` It is equivalent to the setState method that can be used in the class, but it is necessary to ensure that all methods in the class are arrow functions, otherwise an error will be reported
+`updateGlobalStateByKey` 和 `updateCurrentState` 相当于在class中可以使用的setState方法，只不过需要保证class中的所有方法都是箭头函数，否则会报错
 
 ```tsx
 // AppViewModel.ts
@@ -108,20 +108,21 @@ export { AppViewModel }
 
 ## API
 
-### Common State Manage
+### 通用state状态存储
 
-- All APIs related to the beginning of update are common APIs for view and viewModel;
-- All APIs starting with use are view-exclusive APIs;That it's hooks;
+- 所有update开头相关的API均为view和viewModel通用的api；
+- 所有use开头的api均为view独享api；
+- updatexxxState本质是useState的updater
 
 #### updateGlobalStateByKey
 
-Update global state by key
+通过key更新全局state
 
-param：
-- key：To keep keys consistent, use enumeration values
-- value: the state value to update
+参数：
+- key：为了保持key的一致性，请使用枚举值
+- value：要更新的状态值
 
->Examples
+>例子Examples
 
 ```tsx
 import StoreViewModel from 'hooks-view-model';
@@ -139,13 +140,13 @@ class HeaderViewModel extends StoreViewModel<HeaderVMProps> {
 ```
 #### updateCurrentState
 
-- Update the state of the current view, applicable to view and viewModel
-- Automatically bind the name of the current viewModel as the key, no need to pass in the key
+- 更新当前view的state，view 和 viewModel 适用
+- 自动绑定当前viewModel的name作为key，无需传入key
 
-param:
-- value：state value to update
+参数:
+- value：要更新的状态值
 
->Examples
+>例子Examples
 
 ```tsx
 import StoreViewModel from 'hooks-view-model';
@@ -171,11 +172,11 @@ export { HeaderViewModel };
 
 #### getGlobalStateByKey(key)
 
-Get global state by key, applicable to view and viewModel
+通过key获取全局state，view和viewModel 适用
+
 #### getCurrentState()
 
-Get current state, view and viewModel apply
-
+获取当前state，view和viewModel 适用
 ```tsx
 import StoreViewModel from 'hooks-view-model';
 
@@ -189,18 +190,19 @@ export { HeaderViewModel };
 
 #### getGlobalStateByKeys([])
  
-Get global state values ​​in batches through the keys array
-### cache Store
+通过keys数组批量获取全局状态值
 
-- The essence is an object instantiated through new map() and stored in memory
-- Component unloading will still exist, refresh the page or close the page, the variable is released`
+### Store 内存存储
+
+- 本质是通过new map()实例化的对象，存储在内存中
+- `组件卸载仍会存在，刷新页面或关闭页面，该变量释放`
 
 
 #### updateGlobalStore
 
-Update global variable storage by key
+通过key 更新全局变量存储
 
->Examples
+>例子Examples
 
 ```tsx
 class FooterViewModel extends StoreViewModel<any> {
@@ -228,27 +230,29 @@ export { FooterViewModel };
 
 #### getGlobalStoreByKey
 
-- Get global variable storage by key
-- When it exists, it returns the correct value; when it does not exist, it returns undefined
+- 通过key获取全局变量存储
+- 存在时，返回正确的值；不存在时，返回undefined
+
 
 
 #### removeGlobalStoreByKey
 
-- Remove global variable storage by key, return boolean
+- 通过key 移除全局变量存储，返回布尔值
 
-## Persistent storage 
+### 持久化存储localStorage
 
-PersistStore is essentially stored in localstorage, and localstorage is valid for permanent unless manually deleted
+PersistStore 本质是存储在localstorage，localStorage有效期为永久，除非手动删除
+
 #### updateGlobalPersistStore
 
-Update global persistent storage
+更新全局持久化存储
 
-param：
-- key：key to update
-- value：value to update
+参数：
+- key：要更新的键
+- value：要更新的值
 
 
->Examples
+>例子Examples
 
 ```tsx
 
@@ -265,9 +269,9 @@ export { FooterViewModel };
 
 #### getGlobalPersistStoreByKey
 
-Obtain data in global persistent storage by key
+通过key获取全局持久化存储的数据
 
->Examples
+>例子Examples
 
 
 ```tsx
@@ -292,11 +296,10 @@ export default function Footer() {
 
 #### removeGlobalPersistStoreByKey
 
-Remove global persistent storage by key
-
-Return value: boolean
-  ○ true : Indicates the deletion was successful
-  ○ false : Indicates that deletion failed
+通过key移除全局持久化存储
+返回值：布尔值
+  ○ true 表示删除成功
+  ○ false 表示删除失败
 
 
 ```tsx
@@ -315,13 +318,13 @@ export { FooterViewModel };
 
 #### useGlobalState
 
-- Similar to useState hooks, get the state corresponding to the global view, only for view
-- Respond to updates from updateGlobalStateByKey
+- 类似useState  hooks，获取全局 view 对应的state，仅view 适用
+- 响应来自updateGlobalStateByKey的更新
 
 
-param：
-- key：The key corresponding to the state to be obtained
-- initialState：Initialize state, similar to the default value of useState
+参数：
+- key：要获取的state对应的key
+- initialState：初始化state，类似useState默认值
 
 ```tsx
 import { useVM } from 'hooks-view-model';
@@ -339,24 +342,24 @@ export default function App() {
 ```
 #### useCurrentState
 
-- hooks, get the state corresponding to the current view, only for view
-- Respond to updates from updateCurrentState
+- hooks，获取当前view 对应的state，仅view 适用
+- 响应来自updateCurrentState的更新
 
-param：
-- initialState: initialize state, similar to the default value of useState
-  
-Usage: same as above
+参数：
+- initialState：初始化state，类似useState默认值
+
+用法：上同
 
 #### useVM
+- hooks，实例化ViewModel，view通过调用useVM，可获取对应的ViewModel和StoreViewModel的所有public API；
+- 在组件挂载时执行mounted生命周期钩子；在组件卸载时 执行unmounted 生命周期钩子；
+- 当接收新的props时，自动执行onReceiveProps方法
+- 将最新的props赋值给viewModel，viewModel 可通过this.props.xxx 获取最新的props
 
-- hooks, instantiate ViewModel, view can obtain all public APIs of corresponding ViewModel and StoreViewModel by calling useVM;
-- Execute the mounted lifecycle hook when the component is mounted; execute the unmounted lifecycle hook when the component is unmounted;
-- When new props are received, the onReceiveProps method is automatically executed
-- Assign the latest props to viewModel, viewModel can get the latest props through this.props.xxx
-  
-param：
+参数：
 - viewModel
-- props: the parameters passed by the view to the viewModel, and the ViewModel is accessed through this.props
+- props：view传递给viewModel的参数，ViewModel通过this.props访问
+
 
 ```tsx
 import  {  useVM } from 'hooks-view-model';
@@ -390,13 +393,12 @@ export default function Footer() {
 ```
 
 
-### lifecycle hooks
+### 生命周期钩子
 
 #### mounted
 
-When the component is mounted, the ViewModel will automatically execute this method, and there is no need to introduce useEffect in the view to execute the related lifecycle api.
-
-mounted is equivalent to componentDidMount of viewModel
+组件挂载的时候，ViewModel 会自动执行该方法，无需在view中引入useEffect执行相关生命周期api。
+mounted相当于是viewModel的componentDidMount
 
 ```tsx
 import StoreViewModel from 'hooks-view-model';
@@ -411,7 +413,7 @@ export { HeaderViewModel };
 
 #### unmounted
 
-When the component is unmounted, the ViewModel will automatically execute this method
+组件卸载的时候，ViewModel 会自动执行该方法
 
 ```tsx
 import StoreViewModel from 'hooks-view-model';
@@ -426,9 +428,7 @@ export { HeaderViewModel };
 
 #### onReceiveProps
 
-which will be called when new props are received;
-
-parameter: props
+接收新的props时触发，参数：props
 
 ```tsx
 // Counter.View.tsx
@@ -476,7 +476,7 @@ class CounterViewModel extends StoreViewModel<any> {
     console.log('removed', removed);
   };
   onReceiveProps = (props: any) => {
-    console.log('Called automatically when new props are received', props);
+    console.log('接收新的props时自动触发', props);
   };
 
 }
