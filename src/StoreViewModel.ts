@@ -153,20 +153,13 @@ abstract class StoreViewModel<P = {}> {
   private _cleanStore = (store, key) => {
     try {
       console.info(`cleaning ${key} currentStore...`, store);
-      store.delete(key);
-      store.size === 0
+      const success = store.delete(key);
+      success
         ? console.info(`cleaning ${key} store done`)
         : console.warn('clean failed');
     } catch (error) {
       console.error('cleaning ${key} store failed!', error.message);
     }
-  };
-  private _getStateUpdater = <K, ValueType>(
-    key: K,
-  ): StateUpdater<ValueType> => {
-    return (incomingValue: ValueType) => {
-      this.updateGlobalStateByKey<K, ValueType>(key, incomingValue);
-    };
   };
   // updateStoreByKey
   /**
