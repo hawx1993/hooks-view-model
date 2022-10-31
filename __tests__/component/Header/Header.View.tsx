@@ -10,9 +10,9 @@ export default function Header() {
     useGlobalState,
     updatePersonInfo,
     useCurrentState,
-  } = useVM(HeaderViewModel, {});
-  const [data] = useGlobalState(GLOBAL_KEYS.HEADER, { count: 0 });
-  const [headerData] = useCurrentState({
+  } = useVM(HeaderViewModel, { count: 1 });
+  const data = useGlobalState(GLOBAL_KEYS.HEADER, { count: 0 });
+  const headerData = useCurrentState({
     headCount: 0,
     person: { name: '', age: 0, height: 0 },
   });

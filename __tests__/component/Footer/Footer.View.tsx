@@ -3,10 +3,9 @@ import { FooterViewModel } from './Footer.ViewModel';
 
 export default function Footer() {
   const { useCurrentState, updateCount } = useVM(FooterViewModel, {});
-  const [footerData] = useCurrentState({
+  const { count } = useCurrentState({
     count: 0,
   });
-  const { count } = footerData;
   const incrementFooterCount = () => updateCount(count + 1);
   return {
     count,

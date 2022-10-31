@@ -16,7 +16,7 @@ enum STORE_TYPE {
 }
 // TODO: add useLocalStore for persist data
 type StoreViewModelProps = {
-  VM_NAME: string;
+  VM_NAME?: string;
 };
 
 abstract class StoreViewModel<P = {}> {
@@ -212,7 +212,7 @@ abstract class StoreViewModel<P = {}> {
       return cleanup;
     }, []);
     current.updaters.add(state[1]);
-    return [current?.value || {}, this._getStateUpdater(key)];
+    return current?.value || {};
   };
 
   // useGlobalStore
@@ -241,7 +241,7 @@ abstract class StoreViewModel<P = {}> {
       return cleanup;
     }, []);
     current.updaters.add(state[1]);
-    return [current?.value || {}, this._getStateUpdater(key)];
+    return current?.value || {};
   };
   /**
    * 通过key获取全局state，view和viewModel 适用;

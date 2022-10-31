@@ -73,9 +73,7 @@ const AppView = () => {
   const { changeAddress, useGlobalState } = useVM(AppViewModel, {
     address: '0x000',
   })
-  const [viewData] = useGlobalState(GLOBAL_KEYS.View)
-  const { address } = viewData
-
+  const { address } = useGlobalState(GLOBAL_KEYS.View)
   return (
     <div>
       <button onClick={changeAddress}>click to change address</button>
@@ -286,7 +284,7 @@ export default function Footer() {
     useCurrentState,
     getGlobalPersistStoreByKey,
   } = useVM(FooterViewModel, {});;
-  const [footerData] = useCurrentState({
+  const { count } = useCurrentState({
     count: 0,
   });
 
@@ -303,8 +301,8 @@ export default function Footer() {
 Remove global persistent storage by key
 
 Return value: boolean
-  ○ true : Indicates the deletion was successful
-  ○ false : Indicates that deletion failed
+  - true : Indicates the deletion was successful
+  - false : Indicates that deletion failed
 
 
 ```tsx
@@ -339,8 +337,7 @@ export default function App() {
  const {
     useGlobalState,
   } = useVM(AppViewModel, {});
-  const [data] = useGlobalState(GLOBAL_KEYS.APP, { count: 0 });
-  const { count } = data;
+  const { count } = useGlobalState(GLOBAL_KEYS.APP, { count: 0 });
 
   return <div>{count}</div>
 }
@@ -378,11 +375,10 @@ export default function Footer() {
     removeLocalValue,
     useCurrentState
   } = useVM(FooterViewModel, {name: 'pefma', value: 'value'});
-  const [footerData] = useCurrentState({
+  const { count }  = useCurrentState({
     count: 0,
   });
   const [num, setNum] = useState(0);
-  const { count } = footerData;
 
   return (
     <div style={{ border: '1px solid red' }}>
@@ -445,8 +441,7 @@ const Counter = (props: any) => {
   const { updateCount, useCurrentState } = useVM(CounterViewModel, {
     props,
   });
-  const [data] = useCurrentState({ count: 0 });
-  const { count } = data;
+  const { count }  = useCurrentState({ count: 0 });
   return (
     <div>
       <div>Count is {count}</div>
@@ -473,6 +468,10 @@ class CounterViewModel extends StoreViewModel<any> {
       count,
     });
   };
+  getCount = () => {
+    const count = this.getCurrentState();
+    return count
+  }
   updateModalState = () => {
     this.updateGlobalStore('modal_close', true);
   };
