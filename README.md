@@ -439,7 +439,7 @@ parameter: props
 const Counter = (props: any) => {
 	// 当传递给CounterViewModel的props发生变化时，onReceiveProps 会自动执行
   const { updateCount, useCurrentState } = useVM(CounterViewModel, {
-    props,
+    ...props,
   });
   const { count }  = useCurrentState({ count: 0 });
   return (
