@@ -119,17 +119,24 @@ export { AppViewModel }
 Update global state by key
 
 param：
-- key：To keep keys consistent, use enumeration values
+- key：to keep the key unique, use enumeration values
 - value: the state value to update
 
 >Examples
 
 ```tsx
-import StoreViewModel from 'hooks-view-model';
-
+type GLOBAL_KEYS =  {
+  APP = 'APP'
+}
 type HeaderVMProps = {
   count: number
 }
+
+```
+```tsx
+import StoreViewModel from 'hooks-view-model';
+import { GLOBAL_KEYS, HeaderVMProps } from './types'
+
 class HeaderViewModel extends StoreViewModel<HeaderVMProps> {
   updateCount = (count) => {
     this.updateGlobalStateByKey(GLOBAL_KEYS.APP, {

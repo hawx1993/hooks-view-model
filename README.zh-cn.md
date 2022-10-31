@@ -120,17 +120,24 @@ export { AppViewModel }
 通过key更新全局state
 
 参数：
-- key：为了保持key的一致性，请使用枚举值
+- key：为了保持key的唯一性，请使用枚举值
 - value：要更新的状态值
 
 >例子Examples
 
 ```tsx
-import StoreViewModel from 'hooks-view-model';
-
+type GLOBAL_KEYS =  {
+  APP = 'APP'
+}
 type HeaderVMProps = {
   count: number
 }
+
+```
+```tsx
+import StoreViewModel from 'hooks-view-model';
+import { GLOBAL_KEYS, HeaderVMProps } from './types'
+
 class HeaderViewModel extends StoreViewModel<HeaderVMProps> {
   updateCount = (count) => {
     this.updateGlobalStateByKey(GLOBAL_KEYS.APP, {
