@@ -19,7 +19,7 @@ type StoreViewModelProps = {
   VM_NAME?: string;
 };
 
-abstract class StoreViewModel<P = {}> {
+class StoreViewModel<P = {}> {
   props: StoreViewModelProps & P;
 
   constructor(props: StoreViewModelProps & P) {
@@ -200,7 +200,6 @@ abstract class StoreViewModel<P = {}> {
     useEffect(() => {
       const cleanup = () => {
         incomingGlobalState.delete(key);
-        this._cleanStore(globalState, key);
       };
       return cleanup;
     }, []);
@@ -237,12 +236,19 @@ abstract class StoreViewModel<P = {}> {
     return current?.value || {};
   };
   /**
-   * 通过key获取全局state，view和viewModel 适用;
+   * 通过key获取global state，view和viewModel 适用;
    * 参数：getGlobalStateByKey(key)
    */
   public getGlobalStateByKey = <K>(key: K) => {
     const current = globalState.get(key);
     return current?.value || {};
+  };
+  /**
+   * 通过key 移除global state，view和viewModel 适用;
+   * 返回值：布尔值
+   */
+  public removeGlobalStateByKey = <K>(key: K) => {
+    return globalState.delete(key);
   };
   /**
    * 获取当前state，view和viewModel 适用；

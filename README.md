@@ -193,6 +193,12 @@ class HeaderViewModel extends StoreViewModel<any> {
 export { HeaderViewModel };
 ```
 
+#### removeGlobalStateByKey
+
+- Remove global state by key, applicable to view and viewModel;
+- GlobalState will not be automatically recycled when the component is unmounted, consistent with reducer or redux
+
+
 #### getGlobalStateByKeys([])
  
 Get global state values ​​in batches through the keys array

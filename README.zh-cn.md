@@ -194,6 +194,12 @@ class HeaderViewModel extends StoreViewModel<any> {
 export { HeaderViewModel };
 ```
 
+#### removeGlobalStateByKey
+
+- 通过key 移除global state，view和viewModel 适用;
+- `GlobalState` 在组件卸载时不会自动回收，与reducer 或 redux保持一致
+- `currentState` 在组件卸载时会自动回收
+
 #### getGlobalStateByKeys([])
  
 通过keys数组批量获取全局状态值
