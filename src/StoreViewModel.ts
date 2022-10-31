@@ -146,9 +146,9 @@ abstract class StoreViewModel<P = {}> {
     this._updatedStateValue<K, ValueType>(
       key,
       incomingValue,
-      STORE_TYPE.CURRENT_STATE,
+      STORE_TYPE.GLOBAL_STATE,
     );
-    this._emitUpdate<K, ValueType>(key, STORE_TYPE.CURRENT_STATE);
+    this._emitUpdate<K, ValueType>(key, STORE_TYPE.GLOBAL_STATE);
   };
   private _cleanStore = (store, key) => {
     try {
@@ -186,10 +186,10 @@ abstract class StoreViewModel<P = {}> {
    * 参数：useGlobalState(key, initialState?)
    */
   public useGlobalState = <K, State>(key: K, initialState?: State) => {
-    this._setDefaultValue(key, STORE_TYPE.CURRENT_STATE, initialState);
+    this._setDefaultValue(key, STORE_TYPE.GLOBAL_STATE, initialState);
     const current = this._getStoreValue(
       key,
-      STORE_TYPE.CURRENT_STATE,
+      STORE_TYPE.GLOBAL_STATE,
       initialState,
     );
     const state = useState(current.value);
