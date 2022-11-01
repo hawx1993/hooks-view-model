@@ -7,6 +7,20 @@
   <img src="https://img.shields.io/github/issues/hawx1993/hooks-view-model" />
 </p>
 
+`hooks-view-model` 主要用于分离UI与业务逻辑，可以解决 纯hooks组件的问题：
+
+| hooks组件问题 | hooks-view-model  |
+| --- | --- |
+| useState 写法难用，如果有很多state，需要一个个去维护，写法不够简洁 | 可通过对象形式更新与解构数据，写法简洁 |
+|  useReducer + context的全局状态难用，仍然需要定义很多action type，还需要提供provider，使用useReducer跨组件共享状态很麻烦|  全局状态更新只需使用`useGlobalState`hooks，用法简单|
+| 生命周期需要引入useEffect，需要手动管理，且不够语义化 | 提供mounted和unmounted 钩子函数，可自动执行，语义化友好 |
+| 基于hooks的业务组件，内部方法依然难以做到复用，应抽离出去单独维护 | class 写法可通过继承 实现复用，还可以通过`useVM`引入其他viewModel进行复用，复用性高 |
+| 当接收新的props，需要手动使用useEffect观察props变化，没有直接的钩子可以自动触发 | class 提供onReceivedProps 钩子函数，可自动触发执行 |
+| 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
+| React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
+| 当state没有变化，依然会引起组件的`re-render` | StoreViewModel内部做了处理，无需手动优化 |
+| useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
+
 
 `hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
 
@@ -43,13 +57,8 @@ $ yarn add hooks-view-model
 ```ts
 import StoreViewModel, { useVM } from 'hooks-view-model'
 ```
-### 为什么要研发这个解决方案？
+## 为什么要研发这个解决方案？
 
-因为基于函数式的hooks组件的写法太过于宽松，久而久之容易写出面条式难以维护的代码， 为了统一规范化不同部门的组件化风格的写法，将所有业务逻辑统一放viewModel中去处理。
-
-有了这个解决方案，就不需要hooks了吗？
-
-那肯定不是，其他可公用的hooks依然可以继续使用，只不过业务强相关的没法抽离的逻辑推荐写到ViewModel中，hooks依然可以在函数式组件用引入，返回的值可通过useVM传递给ViewModel去处理
 
 ### 容器方案：View 和 ViewModel
 
