@@ -1,6 +1,6 @@
 {
   "name": "hooks-view-model",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "scripts": {
     "build": "npx father  build",
     "version": "npm run build",
@@ -69,6 +69,6 @@
     "@babel/plugin-transform-typescript": "7.19.3"
   },
   "resolutions": {
-   "@babel/plugin-transform-typescript": "7.19.3"
+    "@babel/plugin-transform-typescript": "7.19.3"
   }
 }
