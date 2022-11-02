@@ -1,0 +1,17 @@
+/*
+ * @Author: {{{userName}}} ({{{userEmail}}})
+ * @Date: {{{currentDate}}}
+ */
+import * as React from 'react';
+import { useVM } from 'hooks-view-model';
+import { {{ properCase name }}ViewModel } from './{{ properCase name }}.ViewModel';
+import { ViewProps } from './types';
+import style from './index.module.less'
+
+const {{ properCase name }}View = (props: ViewProps) => {
+  const { useCurrentState } = useVM({{ properCase name }}ViewModel , {});
+  const { name } = useCurrentState({name: '{{ properCase name }}'});
+
+  return <div className={style['{{ dashCase name }}-container']}>{ name }</div>
+}
+export { {{ properCase name }}View };

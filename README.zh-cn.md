@@ -57,9 +57,25 @@ $ yarn add hooks-view-model
 ```ts
 import StoreViewModel, { useVM } from 'hooks-view-model'
 ```
-## 为什么要研发这个解决方案？
+### 快速生成项目模板
 
+执行如下步骤，可一键生成模板文件：
 
+1、添加脚本命令
+```bash
+scripts: {
+  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
+}
+```
+
+2、根目录创建`template.config.js`
+
+指明模板需要生成的相对路径地址:
+```bash
+const dir_to_generate = './src/pages/';
+
+module.exports = dir_to_generate;
+```
 ### 容器方案：View 和 ViewModel
 
 

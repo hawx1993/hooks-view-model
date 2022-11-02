@@ -1,0 +1,19 @@
+/*
+ * @Author: {{{userName}}} ({{{userEmail}}})
+ * @Date: {{{currentDate}}}
+ */
+
+import StoreViewModel from 'hooks-view-model';
+import { ViewModelProps } from './types';
+
+class {{ properCase name }}ViewModel extends StoreViewModel<ViewModelProps> {
+
+  mounted = () => {
+    console.log('mounted')
+  };
+  unmounted = () => {
+    console.log('unmounted')
+  };
+}
+
+export { {{ properCase name }}ViewModel };
