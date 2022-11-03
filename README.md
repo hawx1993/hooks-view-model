@@ -1,6 +1,6 @@
 # hooks-view-model
 
-[中文文档](./README.zh-cn.md)
+[中文文档](https://github.com/hawx1993/hooks-view-model/wiki/hooks-view-model-api)
 
 <p align="center">
   <img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
