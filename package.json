@@ -1,6 +1,6 @@
 {
   "name": "hooks-view-model",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "scripts": {
     "build": "npx father  build",
     "version": "npm run build",
