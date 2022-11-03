@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useDeepCompareEffect } from 'use-deep-compare';
 import { randomString } from './utils';
 import StoreViewModel from './StoreViewModel';
 
@@ -15,8 +16,15 @@ function useVM<VM extends StoreViewModel<P>, P, T>(
     return new ViewModel(newProps, context);
   });
   useEffect(() => {
-    if (vm?.onReceiveProps) {
-      vm.onReceiveProps(props);
+    if (vm?.onReceivedProps) {
+      vm.onReceivedProps(props);
+    }
+    Object.assign(vm.props, { ...props });
+  }, [props]);
+
+  useDeepCompareEffect(() => {
+    if (vm?.onPropsChanged) {
+      vm.onPropsChanged(props);
     }
     Object.assign(vm, { ...props });
   }, [props]);

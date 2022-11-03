@@ -15,7 +15,6 @@
 - 💼 Provide global and local state management without introducing state management solutions such as reducer or redux;
 - 🌲 Provide global cache and persistent data storage management;
 - 🎩 The introduction of this solution into business code will make the business code more organized, maintainable and testable, with clearer division of responsibilities, and avoid problems such as reduced component maintainability and chaotic data processing caused by the combination of spaghetti-style writing.
-- 🌂 Even if the state is updated multiple times, the state does not change, the view will not `re-render`, no need to deal with performance optimization manually
 - 🍰 Effectively avoid the problem of too much state in the component that needs to be managed, and simplify the writing of useState and setState in the form of objects.
 - 🍷 Compared with the native useState hooks, the data is clearer and easier to debug. You can enter `globalStore` in the console to view all state storage information
 - 👋 Can achieve global data update, cross-component data transfer, without `useReducer` or context
@@ -362,7 +361,7 @@ Usage: same as above
 
 - hooks, instantiate ViewModel, view can obtain all public APIs of corresponding ViewModel and StoreViewModel by calling useVM;
 - Execute the mounted lifecycle hook when the component is mounted; execute the unmounted lifecycle hook when the component is unmounted;
-- When new props are received, the onReceiveProps method is automatically executed
+- When new props are received, the onReceivedProps method is automatically executed
 - Assign the latest props to viewModel, viewModel can get the latest props through this.props.xxx
   
 param：
@@ -434,7 +433,7 @@ class HeaderViewModel extends StoreViewModel<any> {
 export { HeaderViewModel };
 ```
 
-#### onReceiveProps
+#### onReceivedProps
 
 which will be called when new props are received;
 
@@ -443,7 +442,7 @@ parameter: props
 ```tsx
 // Counter.View.tsx
 const Counter = (props: any) => {
-	// 当传递给CounterViewModel的props发生变化时，onReceiveProps 会自动执行
+	// 当传递给CounterViewModel的props发生变化时，onReceivedProps 会自动执行
   const { updateCount, useCurrentState } = useVM(CounterViewModel, {
     ...props,
   });

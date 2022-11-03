@@ -1,8 +1,5 @@
 import { SetStateAction, useState, Dispatch, useEffect } from 'react';
-import isEqual from 'react-fast-compare';
 import store from 'store';
-
-type StateUpdater<ValueType> = (value: ValueType) => void;
 
 const globalState = new Map();
 const currentState = new Map();
@@ -102,7 +99,6 @@ class StoreViewModel<P = {}> {
     type: STORE_TYPE,
   ) => {
     const current = this._getStoreValue(key, type);
-    if (isEqual(current.value, value)) return;
     if (type === STORE_TYPE.CURRENT_STATE) {
       this._updateCurrentStoreValue(key, current, value);
     } else {
@@ -137,12 +133,6 @@ class StoreViewModel<P = {}> {
     key: K,
     incomingValue: ValueType,
   ) => {
-    const lastIncomingValue = incomingGlobalState.get(key);
-    if (!isEqual(lastIncomingValue, incomingValue)) {
-      incomingGlobalState.set(key, incomingValue);
-    } else {
-      return;
-    }
     this._updatedStateValue<K, ValueType>(
       key,
       incomingValue,
@@ -168,12 +158,6 @@ class StoreViewModel<P = {}> {
    */
   public updateCurrentState = <ValueType = any>(incomingValue: ValueType) => {
     const key = this.props.VM_NAME;
-    const lastIncomingValue = incomingCurrentState.get(key);
-    if (!isEqual(lastIncomingValue, incomingValue)) {
-      incomingCurrentState.set(key, incomingValue);
-    } else {
-      return;
-    }
     this._updatedStateValue<typeof key, ValueType>(
       key,
       incomingValue,
@@ -338,9 +322,14 @@ class StoreViewModel<P = {}> {
   unmounted = () => {};
 
   /**
-   * 内置函数，接收props时触发
+   * 内置函数，接收props时触发，相当于useEffect(() => {}, [props])
    */
-  onReceiveProps?(props: P): void;
+  onReceivedProps?(props: P): void;
+
+  /**
+   * 内置函数，props发生改变时才触发，相当于useDeepCompareEffect
+   */
+  onPropsChanged?(props: P): void;
 }
 
 (global as any).globalStore = {

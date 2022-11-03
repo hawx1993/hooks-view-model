@@ -18,7 +18,6 @@
 | 当接收新的props，需要手动使用useEffect观察props变化，没有直接的钩子可以自动触发 | class 提供onReceivedProps 钩子函数，可自动触发执行 |
 | 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
 | React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
-| 当state没有变化，依然会引起组件的`re-render` | StoreViewModel内部做了处理，无需手动优化 |
 | useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
 
 
@@ -27,7 +26,6 @@
 - 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
 - 🌲 提供全局缓存与持久化数据存储管理；
 - 🎩 业务代码引入该方案，将使业务代码更具有可组织性，可维护性和可测试性，职责划分更清晰，避免面条式写法杂糅一起造成的组件维护性下降，数据处理混乱等问题的出现。
-- 🌂 即使多次更新state，state未改变，view也不会`re-render`，无需手动处理性能优化
 - 🍰 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
 - 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
 - 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
@@ -388,7 +386,7 @@ export default function App() {
 #### useVM
 - hooks，实例化ViewModel，view通过调用useVM，可获取对应的ViewModel和StoreViewModel的所有public API；
 - 在组件挂载时执行mounted生命周期钩子；在组件卸载时 执行unmounted 生命周期钩子；
-- 当接收新的props时，自动执行onReceiveProps方法
+- 当接收新的props时，自动执行onReceivedProps方法
 - 将最新的props赋值给viewModel，viewModel 可通过this.props.xxx 获取最新的props
 
 参数：
@@ -459,14 +457,14 @@ class HeaderViewModel extends StoreViewModel<any> {
 export { HeaderViewModel };
 ```
 
-#### onReceiveProps
+#### onReceivedProps
 
 接收新的props时触发，参数：props
 
 ```tsx
 // Counter.View.tsx
 const Counter = (props: any) => {
-	// 当传递给CounterViewModel的props发生变化时，onReceiveProps 会自动执行
+	// 当传递给CounterViewModel的props发生变化时，onReceivedProps 会自动执行
   const { updateCount, useCurrentState } = useVM(CounterViewModel, {
     ...props,
   });
@@ -511,10 +509,14 @@ class CounterViewModel extends StoreViewModel<any> {
     const removed = this.removeGlobalPersistStoreByKey('local_value');
     console.log('removed', removed);
   };
-  onReceiveProps = (props: any) => {
+  onReceivedProps = (props: any) => {
     console.log('接收新的props时自动触发', props);
   };
 
 }
 export { CounterViewModel };
 ```
+
+#### onPropsChanged
+
+内置函数，props发生改变时才触发，相当于`useDeepCompareEffect`
