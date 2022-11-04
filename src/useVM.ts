@@ -15,12 +15,6 @@ function useVM<VM extends StoreViewModel<P>, P, T>(
     };
     return new ViewModel(newProps, context);
   });
-  useEffect(() => {
-    if (vm?.onReceivedProps) {
-      vm.onReceivedProps(props);
-    }
-    Object.assign(vm.props, { ...props });
-  }, [props]);
 
   useDeepCompareEffect(() => {
     if (vm?.onPropsChanged) {

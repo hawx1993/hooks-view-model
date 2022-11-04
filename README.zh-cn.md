@@ -15,7 +15,7 @@
 |  useReducer + context的全局状态难用，仍然需要定义很多action type，还需要提供provider，使用useReducer跨组件共享状态很麻烦|  全局状态更新只需使用`useGlobalState`hooks，用法简单|
 | 生命周期需要引入useEffect，需要手动管理，且不够语义化 | 提供mounted和unmounted 钩子函数，可自动执行，语义化友好 |
 | 基于hooks的业务组件，内部方法依然难以做到复用，应抽离出去单独维护 | class 写法可通过继承 实现复用，还可以通过`useVM`引入其他viewModel进行复用，复用性高 |
-| 当接收新的props，需要手动使用useEffect观察props变化，没有直接的钩子可以自动触发 | class 提供onReceivedProps 钩子函数，可自动触发执行 |
+| 当接收新的props，需要手动使用useEffect观察props变化，没有直接的钩子可以自动触发 | class 提供`onPropsChanged` 钩子函数，可自动触发执行 |
 | 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
 | React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
 | useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
@@ -386,7 +386,7 @@ export default function App() {
 #### useVM
 - hooks，实例化ViewModel，view通过调用useVM，可获取对应的ViewModel和StoreViewModel的所有public API；
 - 在组件挂载时执行mounted生命周期钩子；在组件卸载时 执行unmounted 生命周期钩子；
-- 当接收新的props时，自动执行onReceivedProps方法
+- 当props 发生变化时，自动执行onPropsChanged方法
 - 将最新的props赋值给viewModel，viewModel 可通过this.props.xxx 获取最新的props
 
 参数：
@@ -429,7 +429,7 @@ export default function Footer() {
 #### mounted
 
 组件挂载的时候，ViewModel 会自动执行该方法，无需在view中引入useEffect执行相关生命周期api。
-mounted相当于是viewModel的componentDidMount
+mounted相当于是viewModel的`componentDidMount`
 
 ```tsx
 import StoreViewModel from 'hooks-view-model';
@@ -457,14 +457,16 @@ class HeaderViewModel extends StoreViewModel<any> {
 export { HeaderViewModel };
 ```
 
-#### onReceivedProps
+#### onPropsChanged
+
+内置函数，props发生改变时才触发，相当于`useDeepCompareEffect`
 
 接收新的props时触发，参数：props
 
 ```tsx
 // Counter.View.tsx
 const Counter = (props: any) => {
-	// 当传递给CounterViewModel的props发生变化时，onReceivedProps 会自动执行
+	// 当传递给CounterViewModel的props发生变化时，onPropsChanged 会自动执行
   const { updateCount, useCurrentState } = useVM(CounterViewModel, {
     ...props,
   });
@@ -510,13 +512,9 @@ class CounterViewModel extends StoreViewModel<any> {
     console.log('removed', removed);
   };
   onReceivedProps = (props: any) => {
-    console.log('接收新的props时自动触发', props);
+    console.log('当props 发生变化时自动触发', props);
   };
 
 }
 export { CounterViewModel };
 ```
-
-#### onPropsChanged
-
-内置函数，props发生改变时才触发，相当于`useDeepCompareEffect`

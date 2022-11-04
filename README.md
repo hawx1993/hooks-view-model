@@ -1,6 +1,6 @@
 # hooks-view-model
 
-[中文文档](./README.zh-cn.md)
+[中文文档]([./README.zh-cn.md](https://github.com/hawx1993/hooks-view-model/wiki/hooks-view-model-api-%E6%96%87%E6%A1%A3))
 
 <p align="center">
   <img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
@@ -361,7 +361,6 @@ Usage: same as above
 
 - hooks, instantiate ViewModel, view can obtain all public APIs of corresponding ViewModel and StoreViewModel by calling useVM;
 - Execute the mounted lifecycle hook when the component is mounted; execute the unmounted lifecycle hook when the component is unmounted;
-- When new props are received, the onReceivedProps method is automatically executed
 - Assign the latest props to viewModel, viewModel can get the latest props through this.props.xxx
   
 param：
@@ -433,7 +432,7 @@ class HeaderViewModel extends StoreViewModel<any> {
 export { HeaderViewModel };
 ```
 
-#### onReceivedProps
+#### onPropsChange
 
 which will be called when new props are received;
 
@@ -442,7 +441,6 @@ parameter: props
 ```tsx
 // Counter.View.tsx
 const Counter = (props: any) => {
-	// 当传递给CounterViewModel的props发生变化时，onReceivedProps 会自动执行
   const { updateCount, useCurrentState } = useVM(CounterViewModel, {
     ...props,
   });
@@ -487,8 +485,8 @@ class CounterViewModel extends StoreViewModel<any> {
     const removed = this.removeGlobalPersistStoreByKey('local_value');
     console.log('removed', removed);
   };
-  onReceiveProps = (props: any) => {
-    console.log('Called automatically when new props are received', props);
+  onPropsChange = (props: any) => {
+    console.log('Called automatically when new props are changed', props);
   };
 
 }

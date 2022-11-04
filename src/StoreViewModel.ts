@@ -322,11 +322,6 @@ class StoreViewModel<P = {}> {
   unmounted = () => {};
 
   /**
-   * 内置函数，接收props时触发，相当于useEffect(() => {}, [props])
-   */
-  onReceivedProps?(props: P): void;
-
-  /**
    * 内置函数，props发生改变时才触发，相当于useDeepCompareEffect
    */
   onPropsChanged?(props: P): void;
