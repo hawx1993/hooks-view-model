@@ -1,6 +1,6 @@
 {
   "name": "hooks-view-model",
-  "version": "0.4.1",
+  "version": "0.4.9",
   "scripts": {
     "build": "npx father  build",
     "version": "npm run build",
@@ -48,6 +48,7 @@
     "react": ">=17.0.2"
   },
   "dependencies": {
+    "immer": "^9.0.16",
     "plop": "2.1.0",
     "store": "2.0.12",
     "use-deep-compare": "^1.1.0"

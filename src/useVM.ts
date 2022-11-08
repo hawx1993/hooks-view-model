@@ -15,12 +15,14 @@ function useVM<VM extends StoreViewModel<P>, P, T>(
     };
     return new ViewModel(newProps, context);
   });
+  useEffect(() => {
+    Object.assign(vm.props, { ...props });
+  }, [props]);
 
   useDeepCompareEffect(() => {
     if (vm?.onPropsChanged) {
       vm.onPropsChanged(props);
     }
-    Object.assign(vm, { ...props });
   }, [props]);
 
   useEffect(() => {

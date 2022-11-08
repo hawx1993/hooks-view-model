@@ -1,7 +1,5 @@
 # hooks-view-model
 
-[中文文档](https://github.com/hawx1993/hooks-view-model/wiki/hooks-view-model-api)
-
 <p align="center">
   <img src="https://img.shields.io/github/license/hawx1993/hooks-view-model" />
   <img src="https://img.shields.io/github/stars/hawx1993/hooks-view-model" /> 
@@ -9,30 +7,45 @@
   <img src="https://img.shields.io/github/issues/hawx1993/hooks-view-model" />
 </p>
 
+`hooks-view-model` 主要用于分离UI与业务逻辑，可以解决 纯hooks组件的问题：
 
-`hooks-view-model` is a solution by decouple UI view and business logic for react hooks. Using `hooks-view-model` will bring the following conveniences:
-
-- 💼 Provide global and local state management without introducing state management solutions such as reducer or redux;
-- 🌲 Provide global cache and persistent data storage management;
-- 🎩 The introduction of this solution into business code will make the business code more organized, maintainable and testable, with clearer division of responsibilities, and avoid problems such as reduced component maintainability and chaotic data processing caused by the combination of spaghetti-style writing.
-- 🍰 Effectively avoid the problem of too much state in the component that needs to be managed, and simplify the writing of useState and setState in the form of objects.
-- 🍷 Compared with the native useState hooks, the data is clearer and easier to debug. You can enter `globalStore` in the console to view all state storage information
-- 👋 Can achieve global data update, cross-component data transfer, without `useReducer` or context
-- 🌲 Different stores are divided according to the key, and the view component will not respond to the state change of the unused store, which can cancel the performance overhead.
-- 🍳 ViewModel will provide basic life cycle functions without frequently introducing useEffect in hooks components for processing
-- 🍖 ViewModel will automatically trigger memory recycling according to the life cycle of react hooks, and memory management is more planned
-- 🥒 Since the function has already been extracted into the ViewModel, there is no need to use `useCallback` to deal with the component re-rendering problem caused by the change of function reference.
+| hooks组件问题 | hooks-view-model  |
+| --- | --- |
+| useState 写法难用，如果有很多state，需要一个个去维护，写法不够简洁 | 可通过对象形式更新与解构数据，写法简洁 |
+|  useReducer + context的全局状态难用，仍然需要定义很多action type，还需要提供provider，使用useReducer跨组件共享状态很麻烦|  全局状态更新只需使用`useGlobalState`hooks，用法简单|
+| 生命周期需要引入useEffect，需要手动管理，且不够语义化 | 提供mounted和unmounted 钩子函数，可自动执行，语义化友好 |
+| 基于hooks的业务组件，内部方法依然难以做到复用，应抽离出去单独维护 | class 写法可通过继承 实现复用，还可以通过`useVM`引入其他viewModel进行复用，复用性高 |
+| 当接收新的props，需要手动使用useEffect观察props变化，没有直接的钩子可以自动触发 | class 提供`onPropsChanged` 钩子函数，可自动触发执行 |
+| 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
+| React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
+| useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
 
 
-Based on the implementation of `react hooks`, by splitting the react view and business logic, a real divide and conquer is achieved. View is only responsible for displaying views, ViewModel is responsible for state and data processing, and View obtains data through `useGlobalStore/useCurrentStore` and actively updates the view.
+`hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
+
+- 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
+- 🌲 提供全局缓存与持久化数据存储管理；
+- 🎩 业务代码引入该方案，将使业务代码更具有可组织性，可维护性和可测试性，职责划分更清晰，避免面条式写法杂糅一起造成的组件维护性下降，数据处理混乱等问题的出现。
+- 🍰 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
+- 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
+- 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
+- 🌲 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
+- 🍳 ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
+- 🍖 ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
+- 🥒 由于函数已经提取到ViewModel，所以无需使用`useCallback` 处理因避免函数引用变动所导致的组件重渲染问题。
+
+
+基于`react hooks `实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
 
 <img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
 
+由上图可知，顾名思义，ViewModel就是用来处理数据绑定和dom 事件监听的。
 
-Based on `hooks-view-model`, there is no need for useCallback, no need for useReducer, no need for technical solutions such as redux. `hooks-view-model` is a solution that integrates state management, variable storage management and persistent data management.
-### Quick Start
+基于`hooks-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
 
-1、install：
+### 快速使用
+
+1、安装：
 ```bash
 $ yarn add hooks-view-model
 ```
@@ -42,25 +55,36 @@ $ yarn add hooks-view-model
 ```ts
 import StoreViewModel, { useVM } from 'hooks-view-model'
 ```
-### Why develop this solution?
+### 快速生成项目模板
 
-Because the writing style of the functional hooks component is too loose, it is easy to write spaghetti-style code that is difficult to maintain over time. In order to standardize the writing style of the component style of different departments, all business logic is unified in the viewModel for processing.
+执行如下步骤，可一键生成模板文件：
 
-1. With this solution there is no need for hooks?
-  
-That is definitely not the case. Other public hooks can still be used, but the logic that is strongly related to the business and cannot be separated is recommended to be written in the ViewModel. The hooks can still be introduced in functional components, and the returned value can be passed to the useVM. ViewModel to handle
+1、添加脚本命令
+```bash
+scripts: {
+  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
+}
+```
 
-### View and  ViewModel
+2、根目录创建`template.config.js`
+
+指明模板需要生成的相对路径地址:
+```bash
+const dir_to_generate = './src/pages/';
+
+module.exports = dir_to_generate;
+```
+### 容器方案：View 和 ViewModel
 
 
-First: The AppView view component instantiates the AppViewModel through useVM, and obtains the instance methods of `AppViewModel` and `StoreViewModel`;
+首先：AppView  视图组件通过useVM实例化AppViewModel，并获取`AppViewModel`和`StoreViewModel`的实例方法；
 
-Second: the AppView view component gets the global and current page state state through `useGlobalState` and `useCurrentState`, where:
+其次：AppView 视图组件通过`useGlobalState`和`useCurrentState`获取全局和当前页面状态state，其中：
 
-- `useGlobalState` responds to updates from `updateGlobalStateByKey`
-- `useCurrentState`  responds to updates from `updateCurrentState` 
+- `useGlobalState` 响应来自`updateGlobalStateByKey` 的更新
+- `useCurrentState` 响应来自`updateCurrentState` 的更新
 
->View：Get data and display data
+>View：获取数据并展示数据
 
 ```tsx
 // AppView.tsx
@@ -83,9 +107,9 @@ const AppView = () => {
 
 ```
 
->ViewModel：Manage data, manage state and data
+>ViewModel：处理数据，管理状态和数据
 
-`updateGlobalStateByKey` and  `updateCurrentState` It is equivalent to the setState method that can be used in the class, but it is necessary to ensure that all methods in the class are arrow functions, otherwise an error will be reported
+`updateGlobalStateByKey` 和 `updateCurrentState` 相当于在class中可以使用的setState方法，只不过需要保证class中的所有方法都是箭头函数，否则会报错
 
 ```tsx
 // AppViewModel.ts
@@ -106,389 +130,8 @@ export { AppViewModel }
 
 ## API
 
-### Common State Manage
 
-- All APIs related to the beginning of update are common APIs for view and viewModel;
-- All APIs starting with use are view-exclusive APIs;That it's hooks;
 
-#### updateGlobalStateByKey
+详情查看👉: [中文文档](https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api)
 
-Update global state by key
-
-param：
-- key：to keep the key unique, use enumeration values
-- value: the state value to update
-
->Examples
-
-```tsx
-type GLOBAL_KEYS =  {
-  APP = 'APP'
-}
-type HeaderVMProps = {
-  count: number
-}
-
-```
-```tsx
-import StoreViewModel from 'hooks-view-model';
-import { GLOBAL_KEYS, HeaderVMProps } from './types'
-
-class HeaderViewModel extends StoreViewModel<HeaderVMProps> {
-  updateCount = (count) => {
-    this.updateGlobalStateByKey(GLOBAL_KEYS.APP, {
-      count,
-    });
-  };
-}
-```
-#### updateCurrentState
-
-- Update the state of the current view, applicable to view and viewModel
-- Automatically bind the name of the current viewModel as the key, no need to pass in the key
-
-param:
-- value：state value to update
-
->Examples
-
-```tsx
-import StoreViewModel from 'hooks-view-model';
-
-class HeaderViewModel extends StoreViewModel<any> {
-  updatePersonInfo = (person: {
-    name: string;
-    age?: number;
-    height?: number;
-  }) => {
-    this.updateCurrentState({
-      person,
-    });
-  };
-  changeHeaderData = (count) => {
-    this.updateCurrentState({
-      headCount: count,
-    });
-  };
-}
-export { HeaderViewModel };
-```
-
-#### getGlobalStateByKey(key)
-
-Get global state by key, applicable to view and viewModel
-#### getCurrentState()
-
-Get current state, view and viewModel apply
-
-```tsx
-import StoreViewModel from 'hooks-view-model';
-
-class HeaderViewModel extends StoreViewModel<any> {
-  changeModule = () => {
-     const { tableData } = this.getCurrentState();
-  }
-}
-export { HeaderViewModel };
-```
-
-#### removeGlobalStateByKey
-
-- Remove global state by key, applicable to view and viewModel;
-- GlobalState will not be automatically recycled when the component is unmounted, consistent with reducer or redux
-
-
-#### getGlobalStateByKeys([])
- 
-Get global state values ​​in batches through the keys array
-### cache Store
-
-- The essence is an object instantiated through new map() and stored in memory
-- Component unloading will still exist, refresh the page or close the page, the variable is released`
-
-
-#### updateGlobalStore
-
-Update global variable storage by key
-
->Examples
-
-```tsx
-class FooterViewModel extends StoreViewModel<any> {
-  updateCount = count => {
-    this.updateCurrentState({
-      count,
-    });
-  };
-  updateModalState = () => {
-    this.updateGlobalStore('modal_close', true);
-  };
-  updateLocalValue = () => {
-    this.updateGlobalPersistStore('local_value', { name: 'huang', age: 123 });
-  };
-  removeLocalValue = () => {
-    const removed = this.removeGlobalPersistStoreByKey('local_value');
-    console.log('removed', removed);
-  };
-  mounted = () => {
-    console.log('mounted123');
-  };
-}
-export { FooterViewModel };
-```
-
-#### getGlobalStoreByKey
-
-- Get global variable storage by key
-- When it exists, it returns the correct value; when it does not exist, it returns undefined
-
-
-#### removeGlobalStoreByKey
-
-- Remove global variable storage by key, return boolean
-
-## Persistent storage 
-
-PersistStore is essentially stored in localstorage, and localstorage is valid for permanent unless manually deleted
-#### updateGlobalPersistStore
-
-Update global persistent storage
-
-param：
-- key：key to update
-- value：value to update
-
-
->Examples
-
-```tsx
-
-class FooterViewModel extends StoreViewModel<any> {
-
-  updateLocalValue = () => {
-    this.updateGlobalPersistStore('local_value', { name: 'huang', age: 123 });
-  };
-
-}
-export { FooterViewModel };
-```
-
-
-#### getGlobalPersistStoreByKey
-
-Obtain data in global persistent storage by key
-
->Examples
-
-
-```tsx
-import { useVM } from 'hooks-view-model';
-
-export default function Footer() {
-  const {
-    useCurrentState,
-    getGlobalPersistStoreByKey,
-  } = useVM(FooterViewModel, {});;
-  const { count } = useCurrentState({
-    count: 0,
-  });
-
-  return (
-    <div style={{ border: '1px solid red' }}>
-      <p>count: {getGlobalPersistStoreByKey('local_value')}</p>
-    </div>
-  );
-}
-```
-
-#### removeGlobalPersistStoreByKey
-
-Remove global persistent storage by key
-
-Return value: boolean
-  - true : Indicates the deletion was successful
-  - false : Indicates that deletion failed
-
-
-```tsx
-class FooterViewModel extends StoreViewModel<any> {
-  removeLocalValue = () => {
-    const removed = this.removeGlobalPersistStoreByKey('local_value');
-    console.log('removed', removed);
-  };
-
-}
-export { FooterViewModel };
-
-```
-
-### hooks
-
-#### useGlobalState
-
-- Similar to useState hooks, get the state corresponding to the global view, only for view
-- Respond to updates from updateGlobalStateByKey
-
-
-param：
-- key：The key corresponding to the state to be obtained
-- initialState：Initialize state, similar to the default value of useState
-
-```tsx
-import { useVM } from 'hooks-view-model';
-import { AppViewModel } from './App.ViewModel.ts';
-
-export default function App() {
- const {
-    useGlobalState,
-  } = useVM(AppViewModel, {});
-  const { count } = useGlobalState(GLOBAL_KEYS.APP, { count: 0 });
-
-  return <div>{count}</div>
-}
-```
-#### useCurrentState
-
-- hooks, get the state corresponding to the current view, only for view
-- Respond to updates from updateCurrentState
-
-param：
-- initialState: initialize state, similar to the default value of useState
-  
-Usage: same as above
-
-#### useVM
-
-- hooks, instantiate ViewModel, view can obtain all public APIs of corresponding ViewModel and StoreViewModel by calling useVM;
-- Execute the mounted lifecycle hook when the component is mounted; execute the unmounted lifecycle hook when the component is unmounted;
-- Assign the latest props to viewModel, viewModel can get the latest props through this.props.xxx
-  
-param：
-- viewModel
-- props: the parameters passed by the view to the viewModel, and the ViewModel is accessed through this.props
-
-```tsx
-import  {  useVM } from 'hooks-view-model';
-
-export default function Footer() {
-  const {
-    updateModalState,
-    getGlobalStoreByKey,
-    updateLocalValue,
-    getGlobalPersistStoreByKey,
-    removeLocalValue,
-    useCurrentState
-  } = useVM(FooterViewModel, {name: 'pefma', value: 'value'});
-  const { count }  = useCurrentState({
-    count: 0,
-  });
-  const [num, setNum] = useState(0);
-
-  return (
-    <div style={{ border: '1px solid red' }}>
-      <p>count: {count}</p>
-      <button onClick={() => updateCount(10)}>+</button>
-      <button onClick={updateModalState}>updateGlobalStore</button>
-      <button onClick={updateValue}>updateValue</button>
-      <button onClick={updateLocalValue}>updateLocalValue</button>
-      <button onClick={removeLocalValue}>removeLocalValue</button>
-    </div>
-  );
-}
-```
-
-
-### lifecycle hooks
-
-#### mounted
-
-When the component is mounted, the ViewModel will automatically execute this method, and there is no need to introduce useEffect in the view to execute the related lifecycle api.
-
-mounted is equivalent to componentDidMount of viewModel
-
-```tsx
-import StoreViewModel from 'hooks-view-model';
-
-class HeaderViewModel extends StoreViewModel<any> {
-  mounted = () => {
-    console.log('app will autorun when component mounted')
-  }
-}
-export { HeaderViewModel };
-```
-
-#### unmounted
-
-When the component is unmounted, the ViewModel will automatically execute this method
-
-```tsx
-import StoreViewModel from 'hooks-view-model';
-
-class HeaderViewModel extends StoreViewModel<any> {
-  unmounted = () => {
-    console.log('app will autorun when component unmounted')
-  }
-}
-export { HeaderViewModel };
-```
-
-#### onPropsChange
-
-which will be called when new props are received;
-
-parameter: props
-
-```tsx
-// Counter.View.tsx
-const Counter = (props: any) => {
-  const { updateCount, useCurrentState } = useVM(CounterViewModel, {
-    ...props,
-  });
-  const { count }  = useCurrentState({ count: 0 });
-  return (
-    <div>
-      <div>Count is {count}</div>
-      <button onClick={() => updateCount(count + 1)}>count</button>
-      <div></div>
-    </div>
-  );
-};
-
-export { Counter };
-
-```
-
-```tsx
-// Counter.ViewModel.ts
-import StoreViewModel from 'hooks-view-model';
-
-class CounterViewModel extends StoreViewModel<any> {
-  constructor(props) {
-    super(props);
-  }
-  updateCount = count => {
-    this.updateCurrentState({
-      count,
-    });
-  };
-  getCount = () => {
-    const count = this.getCurrentState();
-    return count
-  }
-  updateModalState = () => {
-    this.updateGlobalStore('modal_close', true);
-  };
-  updateLocalValue = () => {
-    this.updateGlobalPersistStore('local_value', { name: 'huang', age: 123 });
-  };
-  removeLocalValue = () => {
-    const removed = this.removeGlobalPersistStoreByKey('local_value');
-    console.log('removed', removed);
-  };
-  onPropsChange = (props: any) => {
-    console.log('Called automatically when new props are changed', props);
-  };
-
-}
-export { CounterViewModel };
-```
+View detail: 👉[English docs](https://github.com/hawx1993/hooks-view-model/wiki/English-version-of-hooks-view-model-docs)

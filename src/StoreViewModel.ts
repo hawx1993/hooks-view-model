@@ -1,5 +1,6 @@
 import { SetStateAction, useState, Dispatch, useEffect } from 'react';
 import store from 'store';
+import { produce } from 'immer';
 
 const globalState = new Map();
 const currentState = new Map();
@@ -68,7 +69,7 @@ class StoreViewModel<P = {}> {
     return globalState.get(key);
   };
   private _updateCurrentStoreValue = <K, ValueType>(
-    key,
+    key: K,
     current,
     value: ValueType,
   ) => {
@@ -151,7 +152,6 @@ class StoreViewModel<P = {}> {
       console.error('cleaning ${key} store failed!', error.message);
     }
   };
-  // updateStoreByKey
   /**
    * 更新当前view的state，view 和 viewModel 适用
    * 参数：updateCurrentState(value)
@@ -165,6 +165,24 @@ class StoreViewModel<P = {}> {
     );
     this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STATE);
   };
+  /**
+   * 使用immer 细粒度更新当前view的state，view 和 viewModel 适用;
+   * updateImmerState(stateKey: string, fn)
+   */
+  public updateImmerState = (
+    stateKey: string,
+    fn: (draftState: any) => void,
+  ) => {
+    const currentState = this.getCurrentState();
+    const baseState = currentState?.[stateKey];
+    const nextState = produce(baseState, (draftState) => {
+      fn(draftState);
+    });
+    this.updateCurrentState({
+      [stateKey]: nextState,
+    });
+  };
+
   /**
    * hooks，获取全局 view 对应的state，仅view 适用
    * 参数：useGlobalState(key, initialState?)
