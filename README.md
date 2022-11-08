@@ -127,6 +127,10 @@ class AppViewModel extends StoreViewModel {
 export { AppViewModel } 
 ```
 
+### 为什么要开发这个项目
+
+
+详情查看我在知乎的回答👉 [react hooks有必要分离 ui 和业务逻辑吗？ - trigkit4的回答 - 知乎](https://www.zhihu.com/question/561700319/answer/2741505136)
 
 ## API
 
