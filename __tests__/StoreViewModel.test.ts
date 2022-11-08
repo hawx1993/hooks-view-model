@@ -46,3 +46,14 @@ test('when call incrementFooterCount, should only update footerData', () => {
   });
   expect(result.current.count).toBe(1);
 });
+
+test('测试updateImmerState细粒度更新对象属性值', () => {
+  const { result } = renderHook(() => Footer());
+  act(() => {
+    result.current.updateTodoValue();
+  });
+  expect(result.current.todo).toMatchObject({
+    title: 'test',
+    done: false,
+  });
+});

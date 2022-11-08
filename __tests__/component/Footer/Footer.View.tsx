@@ -2,14 +2,23 @@ import { useVM } from '../../../src/useVM';
 import { FooterViewModel } from './Footer.ViewModel';
 
 export default function Footer() {
-  const { useCurrentState, updateCount } = useVM(FooterViewModel, {});
-  const { count } = useCurrentState({
+  const { useCurrentState, updateTodoValue, updateCount } = useVM(
+    FooterViewModel,
+    {},
+  );
+  const { count, todo } = useCurrentState({
     count: 0,
+    todo: {
+      title: 'test',
+      done: true,
+    },
   });
   const incrementFooterCount = () => updateCount(count + 1);
   return {
     count,
+    todo,
     incrementFooterCount,
+    updateTodoValue,
   };
 }
 // 1、不同的key，数据不会互相影响，store a update， store b不会更新

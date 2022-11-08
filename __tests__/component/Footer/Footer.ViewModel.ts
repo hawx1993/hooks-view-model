@@ -6,5 +6,11 @@ class FooterViewModel extends StoreViewModel<any> {
       count,
     });
   };
+
+  updateTodoValue = () => {
+    this.updateImmerState('todo', (draft) => {
+      draft.done = !draft.done;
+    });
+  };
 }
 export { FooterViewModel };
