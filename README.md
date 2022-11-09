@@ -22,7 +22,8 @@
 - 🍳 ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
 - 🍖 ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
 - 🥒 无需使用`useCallback` 处理因避免函数引用变动所导致的组件重渲染问题。
-- 🍰 可同步获取最新的state值
+- 🍰 调用updater更新后，可同步获取最新的state值
+- 👋 可实现细粒度更新对象的属性值
 
 
 StoreViewModel内部基于`react useState hooks`实现，通过拆分react 视图和业务逻辑，做到真正的分而治之：View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalState/useCurrentState` 获取数据并主动更新视图。
@@ -47,6 +48,7 @@ StoreViewModel内部基于`react useState hooks`实现，通过拆分react 视�
 | 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
 | React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
 | useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
+| 调用updater无法实现细粒度更新对象属性值，需浅拷贝对象后覆盖 | 可通过updateImmerState实现细粒度更新 |
 
 
 ### 快速使用
