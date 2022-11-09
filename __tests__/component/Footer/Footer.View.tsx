@@ -2,10 +2,13 @@ import { useVM } from '../../../src/useVM';
 import { FooterViewModel } from './Footer.ViewModel';
 
 export default function Footer() {
-  const { useCurrentState, updateTodoValue, updateCount } = useVM(
-    FooterViewModel,
-    {},
-  );
+  const {
+    useCurrentState,
+    updateTodoValue,
+    updateCount,
+    useGlobalState,
+    updateGlobalTodoValue,
+  } = useVM(FooterViewModel, {});
   const { count, todo } = useCurrentState({
     count: 0,
     todo: {
@@ -13,11 +16,19 @@ export default function Footer() {
       done: true,
     },
   });
+  const { global_todo } = useGlobalState('GLOBAL_TODO', {
+    global_todo: {
+      title: 'test',
+      done: true,
+    },
+  });
   const incrementFooterCount = () => updateCount(count + 1);
   return {
     count,
+    global_todo,
     todo,
     incrementFooterCount,
+    updateGlobalTodoValue,
     updateTodoValue,
   };
 }

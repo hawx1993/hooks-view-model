@@ -7,6 +7,34 @@
   <img src="https://img.shields.io/github/issues/hawx1993/hooks-view-model" />
 </p>
 
+
+`hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，可做到无需useReducer，无需redux等技术方案实现全局状态更新而不会渲染无关组件。`hooks-view-model`是集状态管理，变量的存储管理和数据的持久化管理于一体的解决方案。
+
+使用`hooks-view-model`将带来如下诸多便利：
+
+- 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
+- 🌲 提供全局缓存与持久化数据存储管理；
+- 🎩 可使业务代码更具有组织性，可维护性和可测试性，职责划分更清晰，避免面条式写法杂糅一起造成的组件维护性下降，数据处理混乱等问题的出现。
+- 🍰 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
+- 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
+- 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
+- 🌲 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
+- 🍳 ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
+- 🍖 ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
+- 🥒 无需使用`useCallback` 处理因避免函数引用变动所导致的组件重渲染问题。
+- 🍰 可同步获取最新的state值
+
+
+StoreViewModel内部基于`react useState hooks`实现，通过拆分react 视图和业务逻辑，做到真正的分而治之：View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalState/useCurrentState` 获取数据并主动更新视图。
+
+<img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
+
+
+
+
+
+### 与hooks组件的对比
+
 `hooks-view-model` 主要用于分离UI与业务逻辑，可以解决 纯hooks组件的问题：
 
 | hooks组件问题 | hooks-view-model  |
@@ -21,28 +49,6 @@
 | useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
 
 
-`hooks-view-model`是一种通过拆分UI视图与业务逻辑的解决方案，使用hooks-view-model将带来如下诸多便利：
-
-- 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
-- 🌲 提供全局缓存与持久化数据存储管理；
-- 🎩 业务代码引入该方案，将使业务代码更具有可组织性，可维护性和可测试性，职责划分更清晰，避免面条式写法杂糅一起造成的组件维护性下降，数据处理混乱等问题的出现。
-- 🍰 有效避免组件内部太多state需要管理的问题，以对象形式简化useState，setState写法。
-- 🍷 相较于原生的useState hooks，数据清晰，更方便debug，可在控制台输入`globalStore`查看所有状态存储信息
-- 👋 可实现全局数据更新，跨组件数据传递，无需`useReducer`或context
-- 🌲 依据key划分不同store，view组件不会响应未使用到的store的状态变化，可解约性能开销
-- 🍳 ViewModel将提供基础的生命周期函数，无需频繁在hooks组件中引入useEffect进行处理
-- 🍖 ViewModel 会根据react hooks生命周期自动触发内存回收，内存管理更方案
-- 🥒 由于函数已经提取到ViewModel，所以无需使用`useCallback` 处理因避免函数引用变动所导致的组件重渲染问题。
-
-
-基于`react hooks `实现，通过拆分react 视图和业务逻辑，做到真正的分而治之，View 只负责展示视图，ViewModel 负责状态和数据处理，View 通过 `useGlobalStore/useCurrentStore` 获取数据并主动更新视图。
-
-<img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
-
-由上图可知，顾名思义，ViewModel就是用来处理数据绑定和dom 事件监听的。
-
-基于`hooks-view-model`，可做到无需useCallback，无需useReducer，无需redux等技术方案。`hooks-view-model`是集状态管理，变量的存储管理和持久化数据管理于一体的解决方案。
-
 ### 快速使用
 
 1、安装：
@@ -55,25 +61,7 @@ $ yarn add hooks-view-model
 ```ts
 import StoreViewModel, { useVM } from 'hooks-view-model'
 ```
-### 快速生成项目模板
 
-执行如下步骤，可一键生成模板文件：
-
-1、添加脚本命令
-```bash
-scripts: {
-  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
-}
-```
-
-2、根目录创建`template.config.js`
-
-指明模板需要生成的相对路径地址:
-```bash
-const dir_to_generate = './src/pages/';
-
-module.exports = dir_to_generate;
-```
 ### 容器方案：View 和 ViewModel
 
 
@@ -233,6 +221,26 @@ Class component业务逻辑分散在组件的各个方法之中，导致重复�
 ViewModel 只是将函数式组件的方法抽离到单一模块维护，并不限制hooks的使用，任何hooks的代码逻辑依然可以得到复用，只有view对应的业务强相关逻辑会被抽离到vm中进行单独维护，可以重离成hooks的方法依然是鼓励抽出去的，两者并不是互斥的，而是相融的。
 
 
+#### 8、如何规范化前端项目文件呢？
+
+可以通过以下配置，快速生成项目模板。执行如下步骤，可一键生成模板文件：
+
+1、添加脚本命令
+```bash
+scripts: {
+  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
+}
+```
+
+2、根目录创建`template.config.js`
+
+指明模板需要生成的相对路径地址:
+```bash
+const dir_to_generate = './src/pages/';
+
+module.exports = dir_to_generate;
+```
+配置的项目模板，可更好统一前端模板代码。实现各个模块分而治之的理念
 
 ## API
 

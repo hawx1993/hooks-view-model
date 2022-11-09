@@ -57,3 +57,13 @@ test('测试updateImmerState细粒度更新对象属性值', () => {
     done: false,
   });
 });
+test('测试updateGlobalImmerState细粒度更新对象属性值', () => {
+  const { result } = renderHook(() => Footer());
+  act(() => {
+    result.current.updateGlobalTodoValue();
+  });
+  expect(result.current.global_todo).toMatchObject({
+    title: 'test',
+    done: false,
+  });
+});

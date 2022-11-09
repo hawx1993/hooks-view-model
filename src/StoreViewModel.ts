@@ -165,23 +165,6 @@ class StoreViewModel<P = {}> {
     );
     this._emitUpdate<typeof key, ValueType>(key, STORE_TYPE.CURRENT_STATE);
   };
-  /**
-   * 使用immer 细粒度更新当前view的state，view 和 viewModel 适用;
-   * updateImmerState(stateKey: string, fn)
-   */
-  public updateImmerState = (
-    stateKey: string,
-    fn: (draftState: any) => void,
-  ) => {
-    const currentState = this.getCurrentState();
-    const baseState = currentState?.[stateKey];
-    const nextState = produce(baseState, (draftState) => {
-      fn(draftState);
-    });
-    this.updateCurrentState({
-      [stateKey]: nextState,
-    });
-  };
 
   /**
    * hooks，获取全局 view 对应的state，仅view 适用
@@ -328,6 +311,41 @@ class StoreViewModel<P = {}> {
       return true;
     }
     return false;
+  };
+  /**
+   * 使用immer 细粒度更新当前view的state，view 和 viewModel 适用;
+   * updateImmerState(stateKey: string, fn)
+   */
+  public updateImmerState = (
+    stateKey: string,
+    fn: (draftState: any) => void,
+  ) => {
+    const currentState = this.getCurrentState();
+    const baseState = currentState?.[stateKey];
+    const nextState = produce(baseState, (draftState) => {
+      fn(draftState);
+    });
+    this.updateCurrentState({
+      [stateKey]: nextState,
+    });
+  };
+  /**
+   * 使用immer 细粒度更新全局state，view 和 viewModel 适用;
+   * updateGlobalImmerState(globalKey, stateKey: string, fn)
+   */
+  public updateGlobalImmerState = <K>(
+    globalKey: K,
+    stateKey: string,
+    fn: (draftState: any) => void,
+  ) => {
+    const globalState = this.getGlobalStateByKey(globalKey);
+    const baseState = globalState?.[stateKey];
+    const nextState = produce(baseState, (draftState) => {
+      fn(draftState);
+    });
+    this.updateGlobalStateByKey(globalKey, {
+      [stateKey]: nextState,
+    });
   };
   /**
    * 钩子函数，组件挂载时自动执行
