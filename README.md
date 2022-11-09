@@ -74,19 +74,20 @@ import StoreViewModel, { useVM } from 'hooks-view-model'
 - `useGlobalState` 响应来自`updateGlobalStateByKey` 的更新
 - `useCurrentState` 响应来自`updateCurrentState` 的更新
 
->View：获取数据并展示数据
+1、View：获取数据并展示数据
 
 ```tsx
-// AppView.tsx
-import { AppViewModel } from './AppViewModel'
+// App.View.tsx
+import { AppViewModel } from './App.ViewModel'
 import { useVM } from 'hooks-view-model'
-import { GLOBAL_KEYS } from 'app/path/to/globalKeys'
+import { usePrevious } from '@/hooks';
 
 const AppView = () => {
-  const { changeAddress, useGlobalState } = useVM(AppViewModel, {
-    address: '0x000',
+  const { perviousAddress } = usePrevious();
+  const { changeAddress, useCurrentState } = useVM(AppViewModel, {
+    address: perviousAddress,
   })
-  const { address } = useGlobalState(GLOBAL_KEYS.View)
+  const { address = 'ZheJiang Province' } = useCurrentState()
   return (
     <div>
       <button onClick={changeAddress}>click to change address</button>
@@ -94,28 +95,26 @@ const AppView = () => {
     </div>
   )
 }
-
 ```
 
->ViewModel：处理数据，管理状态和数据
+
+2、ViewModel：管理状态和处理数据
 
 `updateGlobalStateByKey` 和 `updateCurrentState` 相当于在class中可以使用的setState方法，只不过需要保证class中的所有方法都是箭头函数，否则会报错
 
+
 ```tsx
-// AppViewModel.ts
+// App.ViewModel.ts
 import  StoreViewModel from 'hooks-view-model'
-import { GLOBAL_KEYS } from 'app/path/to/globalKeys'
 
 class AppViewModel extends StoreViewModel {
-  updateViewStore = <T>(value: T) => {
-    this.updateGlobalStateByKey(GLOBAL_KEYS.View, value);// 相当于setState
-  }
   changeAddress = () => {
-    this.updateViewStore(this.props.address)
+    this.updateCurrentState(this.props.address);// 相当于setState
   }
 }
 export { AppViewModel } 
 ```
+
 ### Q & A
 
 #### 1、使用`hooks-view-model` 要怎么用hooks？
