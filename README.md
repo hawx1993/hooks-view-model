@@ -31,6 +31,13 @@ StoreViewModel内部基于`react useState hooks`实现，通过拆分react 视�
 <img src="https://media.perfma.net/guitar/image/WBLaY17t9r4rqA4NeKQnX.png" />
 
 
+## API
+
+
+[English docs](https://github.com/hawx1993/hooks-view-model/wiki/English-version-of-hooks-view-model-docs) |
+[中文文档](https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api)
+
+
 
 
 
@@ -132,11 +139,17 @@ const { useCurrentState } = useVM(AppViewModel, { perviousName })
 `hooks-view-model` 是支持细粒度更新的，可以使用`updateImmerState` api 来实现细粒度更新。参考：[https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api#updateimmerstate](https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api#updateimmerstate)
 
 
-#### 3、🤔 Question: 支持使用hooks抽离业务逻辑不行吗？使用class有何优势？
+#### 3、🤔 Question: 使用hooks抽离业务逻辑不行吗？使用class有何优势？
 
-首先，使用class 可以很好解决上述react hooks的问题；其次，业务逻辑抽离到class中，依然是函数式组件。
+React 的定位原本就是用于构建用户界面的UI库，用UI库去实现业务逻辑本身就是不合理的。
+
+使用class 可以无需关注useCallback，useState等各种hooks带来的各种麻烦问题，可以更加专注业务逻辑，写起业务逻辑来更加纯粹；
+
+其次，使用class 可以很好解决上述react hooks的问题；
+
+其次，业务逻辑抽离到class中，依然是函数式组件。
+
 class相比于function 天然的具有可组织性，可扩展性(extends)，和可维护性。
-使用class 可以专注业务逻辑的书写，而无需关注react hooks带来的各种麻烦问题，诸如useRef，useCallback，useReducer，useState等，写起业务逻辑来更加纯粹；
 
 基于class的viewModel可以更好的维护业务逻辑代码，可以使用装饰器，可以使用public，private等关键字，显示提高代码可维护性和扩展能力。而可复用的hooks可以用来抽象业务逻辑实现副作用观察和逻辑复用，两者具有不同的心智模型。
 
@@ -243,10 +256,3 @@ module.exports = dir_to_generate;
 ```
 配置的项目模板，可更好统一前端模板代码。实现各个模块分而治之的理念
 
-## API
-
-
-
-详情查看👉: [中文文档](https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api)
-
-View detail: 👉[English docs](https://github.com/hawx1993/hooks-view-model/wiki/English-version-of-hooks-view-model-docs)
