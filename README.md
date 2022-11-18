@@ -55,7 +55,8 @@ StoreViewModel内部基于`react useState hooks`实现，通过拆分react 视�
 | 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
 | React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
 | useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
-| 调用updater无法实现细粒度更新对象属性值，需浅拷贝对象后覆盖 | 可通过updateImmerState实现细粒度更新 |
+| 调用useState updater 无法实现细粒度更新对象属性值，需浅拷贝对象后覆盖 | 可通过updateImmerState实现细粒度更新 |
+| 调用useState updater 无法实现immutable 数据，即使memo 包裹子组件也会re-render| 可通过updateImmerState实现immutable 数据，不会re-render子组件 |
 
 
 ### 快速使用
