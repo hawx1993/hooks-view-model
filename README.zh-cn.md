@@ -142,4 +142,4 @@ export { CounterViewModel }
 
 ## Q & A
 
-更多问题与解答，请访问： [Q & A]('./QA.md)
+更多问题与解答，请访问： [Q & A]('./QA.md')

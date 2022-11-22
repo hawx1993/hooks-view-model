@@ -22,6 +22,8 @@
 
 ## Introduction
 
+[中文文档]('./../README.zh-cn.md')
+
 `hooks-view-model` is an intuitive solution to separate UI from business logic.
 
 Based on the `hooks-view-model, you don't have to worry about the closure problem and the above-mentioned hooks problem.`hooks-view-model` is born to solve state management, memory storage, and persistent data. Using `hooks-view-model` will bring the following conveniences:
@@ -121,4 +123,4 @@ For additional information, guides and api reference visit :
 
 ## Q & A
 
-for more question and answer, please visit [Q & A]('./QA.md)
+for more question and answer, please visit [Q & A]('./QA.md')
