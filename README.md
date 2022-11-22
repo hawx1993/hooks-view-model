@@ -22,7 +22,7 @@
 
 ## Introduction
 
-[中文文档]('./README.zh-cn.md')
+[中文文档](./README.zh-cn.md)
 
 `hooks-view-model` is an intuitive solution to separate UI from business logic.
 
@@ -123,4 +123,4 @@ For additional information, guides and api reference visit :
 
 ## Q & A
 
-for more question and answer, please visit [Q & A]('./QA.md')
+for more question and answer, please visit [Q & A](./QA.md)
