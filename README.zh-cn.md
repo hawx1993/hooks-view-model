@@ -105,10 +105,12 @@ import { CounterViewModel } from './Counter.ViewModel'
 import { useVM } from 'hooks-view-model'
 
 const CounterView = () => {
-  const { count, useCurrentState, increment } = useVM(CounterViewModel, {
+  const { useCurrentState, increment } = useVM(CounterViewModel, {
     count: 0, // 作为props传递给CounterViewModel
   })
-  const { address = 'ZheJiang Province' } = useCurrentState()
+  const { user, count } = useCurrentState(user: { name: 'nilu', age: 0});
+
+  console.log('user', user);// {name: 'nilu', age: 10}
   return (
     <div>
       <button onClick={increment}>click to count</button>
@@ -128,6 +130,11 @@ class CounterViewModel extends StoreViewModel {
     const { count } = this.props;// 通过this.props访问来自useVM传递过来的数据
     updateCurrentState({ count: count + 1 });
   };
+   changeUseAge = () => {
+    this.updateImmerState((draft) => {
+      draft.user.age = 10;
+    })
+  }
 }
 export { CounterViewModel } 
 ```
@@ -136,8 +143,8 @@ export { CounterViewModel }
 
 更多使用方法和api 文档相关信息，可访问如下链接：
 
-[English docs](https://github.com/hawx1993/hooks-view-model/wiki/English-version-of-hooks-view-model-docs) |
-[中文文档](https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api)
+[English Api docs](https://github.com/hawx1993/hooks-view-model/wiki/English-version-of-hooks-view-model-docs) |
+[中文Api文档](https://github.com/hawx1993/hooks-view-model/wiki/Chinese-version-of-hooks-view-model-api)
 
 
 ## Q & A

@@ -314,38 +314,28 @@ class StoreViewModel<P = {}> {
   };
   /**
    * 使用immer 细粒度更新当前view的state，view 和 viewModel 适用;
-   * updateImmerState(stateKey: string, fn)
+   * updateImmerState((draft) => void)
    */
-  public updateImmerState = (
-    stateKey: string,
-    fn: (draftState: any) => void,
-  ) => {
+  public updateImmerState = (fn: (draftState: any) => void) => {
     const currentState = this.getCurrentState();
-    const baseState = currentState?.[stateKey];
-    const nextState = produce(baseState, (draftState) => {
+    const nextState = produce(currentState, (draftState) => {
       fn(draftState);
     });
-    this.updateCurrentState({
-      [stateKey]: nextState,
-    });
+    this.updateCurrentState(nextState);
   };
   /**
    * 使用immer 细粒度更新全局state，view 和 viewModel 适用;
-   * updateGlobalImmerState(globalKey, stateKey: string, fn)
+   * updateGlobalImmerState(globalKey, (draft) => void)
    */
   public updateGlobalImmerState = <K>(
     globalKey: K,
-    stateKey: string,
     fn: (draftState: any) => void,
   ) => {
     const globalState = this.getGlobalStateByKey(globalKey);
-    const baseState = globalState?.[stateKey];
-    const nextState = produce(baseState, (draftState) => {
+    const nextState = produce(globalState, (draftState) => {
       fn(draftState);
     });
-    this.updateGlobalStateByKey(globalKey, {
-      [stateKey]: nextState,
-    });
+    this.updateGlobalStateByKey(globalKey, nextState);
   };
   /**
    * 钩子函数，组件挂载时自动执行

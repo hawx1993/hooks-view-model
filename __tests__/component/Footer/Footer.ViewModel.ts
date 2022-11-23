@@ -8,13 +8,13 @@ class FooterViewModel extends StoreViewModel<any> {
   };
 
   updateTodoValue = () => {
-    this.updateImmerState('todo', (draft) => {
-      draft.done = !draft.done;
+    this.updateImmerState((draft) => {
+      draft.todo.done = !draft.todo.done;
     });
   };
   updateGlobalTodoValue = () => {
-    this.updateGlobalImmerState('GLOBAL_TODO', 'global_todo', (draft) => {
-      draft.done = !draft.done;
+    this.updateGlobalImmerState('GLOBAL_TODO', (draft) => {
+      draft.global_todo.done = !draft.global_todo.done;
     });
   };
 }
