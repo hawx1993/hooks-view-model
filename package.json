@@ -9,7 +9,7 @@
     "test": "jest"
   },
   "keywords": [
-    "hooks",
+    "hooks-view-model",
     "react hooks",
     "view model",
     "mvvm",
