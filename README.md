@@ -115,6 +115,12 @@ class CounterViewModel extends StoreViewModel {
       draft.user.age = 10;
     })
   }
+  mounted = async () => {
+    await someAsyncRequest();// auto run just when componentDidMount
+  }
+  unmounted = () => {
+    window.removeEventListener('');// auto run just when componentWillUnmount
+  }
 }
 export { CounterViewModel } 
 ```

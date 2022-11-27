@@ -134,6 +134,12 @@ class CounterViewModel extends StoreViewModel {
     this.updateImmerState((draft) => {
       draft.user.age = 10;
     })
+  },
+  mounted = async () => {
+    await someAsyncRequest();//当 componentDidMount 时自动运行
+  }
+  unmounted = () => {
+    window.removeEventListener('');// 当componentWillUnmount 时自动运行
   }
 }
 export { CounterViewModel } 
