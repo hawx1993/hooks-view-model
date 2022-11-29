@@ -73,8 +73,9 @@ module.exports = dir_to_generate;
 3. When you want to solve the above hooks defects or confusion caused by closures in the project
 ## When not to use this library
 
-1. If you don't like the way class is written, you can try this library [use-better-state](https://github.com/hawx1993/use-better-state)
-2. When you are developing a component library, or your project has nothing to do with the business
+1. If you don't interesting with the `class` style (try this one: [use-better-state](https://github.com/hawx1993/use-better-state))
+2. Your project is a component library
+3. Your project has not involved in the business
 ## Example
 
 `Counter.View.tsx`
