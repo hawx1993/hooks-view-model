@@ -24,7 +24,7 @@
 ## 快速介绍
 
 
-`hooks-view-model` 是一种实现UI与业务逻辑分离的符合直觉的解决方案。基于`hooks-view-model`，你可以不必再为闭包问题以及上述hooks问题而烦恼。`hooks-view-model` 为解决状态管理，内存存储，持久化数据而生。使用`hooks-view-model`将带来如下诸多便利：
+`hooks-view-model` 是一种实现UI与业务逻辑分离的符合直觉的解决方案。基于`hooks-view-model`，你可以不必再为闭包问题以及hooks问题而烦恼。`hooks-view-model` 提供状态管理，内存管理和持久化数据管理。使用`hooks-view-model`将带来如下诸多便利：
 
 - 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
 - 🌲 提供全局缓存与持久化数据存储管理；
@@ -48,16 +48,14 @@ hooks-view-model` 主要用于分离UI与业务逻辑，可以解决 纯hooks组
 
 | hooks组件问题 | hooks-view-model  |
 | --- | --- |
-| useState 写法难用，如果有很多state，需要一个个去维护，写法不够简洁 | 可通过对象形式更新与解构数据，写法简洁 |
-|  useReducer + context的全局状态难用，仍然需要定义很多action type，还需要提供provider，使用useReducer跨组件共享状态很麻烦|  全局状态更新只需使用`useGlobalState`hooks，用法简单|
-| 生命周期需要引入useEffect，需要手动管理，且不够语义化 | 提供mounted和unmounted 钩子函数，可自动执行，语义化友好 |
-| 基于hooks的业务组件，内部方法依然难以做到复用，应抽离出去单独维护 | class 写法可通过继承 实现复用，还可以通过`useVM`引入其他viewModel进行复用，复用性高 |
-| 当接收新的props，需要手动使用useEffect观察props变化，没有直接的钩子可以自动触发 | class 提供`onPropsChanged` 钩子函数，可自动触发执行 |
+| 通常需要设置多个useState，无法细粒度更新属性值 | 可通过对象形式更新与解构数据，可细粒度更新属性值 |
+|  使用`useReducer+context`全局共享状态思维负担大 |  全局状态更新只需使用`useGlobalState`hooks，api符合直觉，用法简单|
+| useEffect模拟mounted缺乏语义化，请求异步函数处理麻烦 | 提供mounted和unmounted 钩子函数，语义化友好。非常适合异步处理 |
 | 当组件达到一定复杂度的时候，堆积到一起的代码会变得越来越难以维护 | UI与逻辑做到了很好的分离，代码组织性强 |
 | React Hook的闭包陷阱问题 | 由于方法都提到class中去维护了，所以不存在此问题 |
-| useState 调用updater更新后，无法同步获取最新state值| 可通过调用getCurrentState 同步获取最新值 |
-| 调用useState updater 无法实现细粒度更新对象属性值，需浅拷贝对象后覆盖 | 可通过updateImmerState实现细粒度更新 |
-| 调用useState updater 无法实现immutable 数据，即使memo 包裹子组件也会re-render| 可通过updateImmerState实现immutable 数据，不会re-render子组件 |
+| useState 调用updater更新后，无法同步获取最新state值 | 可通过调用`getCurrentState` 同步获取最新值 |
+| useState updater 无法实现细粒度更新对象属性值，需浅拷贝对象后覆盖 | 可通过`updateImmerState`实现细粒度更新 |
+| useState updater 无法实现immutable 数据，即使memo 包裹子组件也会re-render| 可通过`updateImmerState`实现immutable 数据，不会re-render子组件 |
 
 
 ## 安装
@@ -105,15 +103,17 @@ import { CounterViewModel } from './Counter.ViewModel'
 import { useVM } from 'hooks-view-model'
 
 const CounterView = () => {
-  const { useCurrentState, increment } = useVM(CounterViewModel, {
-    count: 0, // 作为props传递给CounterViewModel
+  const {  useCurrentState, increment, changeUserAge } = useVM(CounterViewModel, {
+    count: 0, // 作为props传递给 CounterViewModel
   })
-  const { user, count } = useCurrentState(user: { name: 'nilu', age: 0});
-
+  const { user , count } = useCurrentState({
+    user: { name: 'nilu', age: 0}
+  });
   console.log('user', user);// {name: 'nilu', age: 10}
   return (
     <div>
       <button onClick={increment}>click to count</button>
+      <button onClick={changeUserAge}>click to change user age</button>
       <span>{count}</span>
     </div>
   )
@@ -130,7 +130,7 @@ class CounterViewModel extends StoreViewModel {
     const { count } = this.props;// 通过this.props访问来自useVM传递过来的数据
     updateCurrentState({ count: count + 1 });
   };
-   changeUseAge = () => {
+   changeUserAge = () => {
     this.updateImmerState((draft) => {
       draft.user.age = 10;
     })
