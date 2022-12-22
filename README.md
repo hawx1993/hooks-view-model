@@ -50,8 +50,8 @@ Using `hooks-view-model` will bring a lot of convenience as follows:
 
 | hooks component issues | hooks-view-model |
 | --- | --- |
-| Usually need to set multiple useStates, can't update property values at fine granularity | Can update and deconstruct data by object form, can update property values at fine granularity |
-| Use `useReducer+context` global shared state think big | Global state update just use `useGlobalState` hooks, api is intuitive and usage is simple |
+| Usually need to set multiple useStates, can't update property values at fine granularity | Support update and deconstruct data by object form, support update property values at fine granularity |
+|  there is thinking burden while using `useReducer+context` to global shared state | provide `useGlobalState` hooks to share global state, an intuitive api and simple to use |
 | useEffect mock mounted lacks semantics, requesting asynchronous functions is troublesome | Provides mounted and unmounted hooks, semantics friendly. Great for asynchronous processing |
 | When the component reaches a certain complexity, the code piled up together will become more and more difficult to maintain | UI and logic are well separated, code is well organized |
 | The closure trap problem of React Hook | Since the methods are maintained in the class, there is no such problem |
