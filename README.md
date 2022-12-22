@@ -25,9 +25,9 @@
 
 [中文文档](./README.zh-cn.md)
 
-`hooks-view-model` is an intuitive solution to separate UI from business logic.
+`hooks-view-model` is an intuitive solution for separating UI from business logic. Based on `hooks-view-model`, you can stop worrying about closures. `hooks-view-model` provides state management, memory management and persistent data management. 
 
-Based on the `hooks-view-model, you don't have to worry about the closure problem and the above-mentioned hooks problem. `hooks-view-model` is born to solve state management, memory storage, and persistent data. Using `hooks-view-model` will bring the following conveniences:
+Using `hooks-view-model` will bring a lot of convenience as follows:
 
 - 💼 Provide global and local state management, without introducing reducer or redux and other state management solutions;
 - 🌲 Provide global cache and persistent data storage management;
@@ -50,16 +50,14 @@ Based on the `hooks-view-model, you don't have to worry about the closure proble
 
 | hooks component issues | hooks-view-model |
 | --- | --- |
-| useState is difficult to use, if there are many states, you need to maintain them one by one, not concise enough | can update and deconstruct data in the form of objects, simple to write |
-| useReducer + context global state is difficult to use, still need to define a lot of action type, also need to provide provider, using useReducer cross-component sharing state is very troublesome | global state update just use `useGlobalState` hooks, usage is simple |
-| Life cycle requires the introduction of useEffect, which needs to be managed manually and is not semantic enough | Provide mounted and unmounted hooks, which can be executed automatically and are semantic friendly |
-| The business components based on hooks, internal methods are still difficult to do reuse, should be separated out and maintained separately | class writing can be achieved through inheritance reuse, but also through the `useVM` to introduce other viewModel reuse, reusability is high |
-| class provides `onPropsChanged` hook function, can be automatically triggered to execute |
-| When components reach a certain level of complexity, the stacked code becomes increasingly difficult to maintain | UI and logic are well separated, and the code is well organized
-| React Hook's closure trap problem | Since the methods are maintained in the class, there is no such problem |
-| useState can't get the latest state value after calling updater | can get the latest value by calling getCurrentState
-| call useState updater can't update object property value at fine granularity, need to overwrite after shallow copy object | can updateImmerState at fine granularity |
-| call useState updater can't implement immutable data, even memo wrapped subcomponents will be re-rendered | can implement immutable data by updateImmerState, won't re-render subcomponents |
+| Usually need to set multiple useStates, can't update property values at fine granularity | Can update and deconstruct data by object form, can update property values at fine granularity |
+| Use `useReducer+context` global shared state think big | Global state update just use `useGlobalState` hooks, api is intuitive and usage is simple |
+| useEffect mock mounted lacks semantics, requesting asynchronous functions is troublesome | Provides mounted and unmounted hooks, semantics friendly. Great for asynchronous processing |
+| When the component reaches a certain complexity, the code piled up together will become more and more difficult to maintain | UI and logic are well separated, code is well organized |
+| The closure trap problem of React Hook | Since the methods are maintained in the class, there is no such problem |
+| useState can't get the latest state value after calling updater | can get the latest value by calling `getCurrentState`.
+| useState updater can't implement fine-grained update object property value, need to overwrite after shallow copy object | can use `updateImmerState` to implement fine-grained update |
+| useState updater can't implement immutable data, even memo wrapped subcomponents will be re-rendered | can implement immutable data by `updateImmerState`, won't re-render subcomponents |
 
 ## Installation
 
@@ -104,10 +102,12 @@ import { CounterViewModel } from './Counter.ViewModel'
 import { useVM } from 'hooks-view-model'
 
 const CounterView = () => {
-  const {  useCurrentState, increment, changeUseAge } = useVM(CounterViewModel, {
+  const {  useCurrentState, increment, changeUserAge } = useVM(CounterViewModel, {
     count: 0, // as props passed to CounterViewModel
   })
-  const { user , count } = useCurrentState( user: { name: 'nilu', age: 0});
+  const { user , count } = useCurrentState({
+    user: { name: 'nilu', age: 0}
+  });
   console.log('user', user);// {name: 'nilu', age: 10}
   return (
     <div>
@@ -129,7 +129,7 @@ class CounterViewModel extends StoreViewModel {
     const { count } = this.props;// access data from this.props that passed from useVM
     updateCurrentState({ count: count + 1 });
   };
-  changeUseAge = () => {
+  changeUserAge = () => {
     this.updateImmerState((draft) => {
       draft.user.age = 10;
     })
