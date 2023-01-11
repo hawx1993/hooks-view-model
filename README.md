@@ -25,7 +25,7 @@
 
 [中文文档](./README.zh-cn.md)
 
-`hooks-view-model` is an intuitive solution for separating UI from business logic. Based on `hooks-view-model`, you can stop worrying about closures. `hooks-view-model` provides state management, memory management and persistent data management. 
+`hooks-view-model` is a solution that make react hooks support MVVM and aims to separates UI from business logic and provide immutable data & global state management, memory management and persistent data management and provide intuitive API.
 
 Using `hooks-view-model` will bring a lot of convenience as follows:
 
@@ -65,23 +65,6 @@ Using `hooks-view-model` will bring a lot of convenience as follows:
 $ yarn add hooks-view-model
 ```
 
-## Generate template
-
-you can generate project template by the following steps:
-
-1、add generate scripts to `package.json`
-```bash
-scripts: {
-  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
-}
-```
-2、create `template.config.js` to the root directory:
-
-```bash
-const dir_to_generate = './src/pages/';
-
-module.exports = dir_to_generate;
-```
 ## When to use this library
 
 1. When your business project is very complex, you need to consider separating UI and business logic
@@ -145,6 +128,23 @@ export { CounterViewModel }
 ```
 
 
+## Generate template
+
+you can generate project template by the following steps:
+
+1、add generate scripts to `package.json`
+```bash
+scripts: {
+  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
+}
+```
+2、create `template.config.js` to the root directory:
+
+```bash
+const dir_to_generate = './src/pages/';
+
+module.exports = dir_to_generate;
+```
 ## Documentation
 
 For additional information, guides and api reference visit :

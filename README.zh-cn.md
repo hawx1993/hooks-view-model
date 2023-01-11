@@ -24,7 +24,7 @@
 ## 快速介绍
 
 
-`hooks-view-model` 是一种实现UI与业务逻辑分离的符合直觉的解决方案。基于`hooks-view-model`，你可以不必再为闭包问题以及hooks问题而烦恼。`hooks-view-model` 提供状态管理，内存管理和持久化数据管理。使用`hooks-view-model`将带来如下诸多便利：
+一个可以让 react hooks 支持 `mvvm` 的解决方案，旨在将 UI 与业务逻辑分离，并提供不可变数据和全局状态管理、内存管理和持久数据管理，并提供直观的 API。使用`hooks-view-model`将带来如下诸多便利：
 
 - 💼 提供全局与局部state管理，无需引入reducer或redux等状态管理方案；
 - 🌲 提供全局缓存与持久化数据存储管理；
@@ -64,22 +64,6 @@ hooks-view-model` 主要用于分离UI与业务逻辑，可以解决 纯hooks组
 $ yarn add hooks-view-model
 ```
 
-## 模板生成
-
-你可以根据如下步骤快速生成项目模板：
-
-```bash
-scripts: {
-  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
-}
-```
-2、在根目录创建 `template.config.js` :
-
-```bash
-const dir_to_generate = './src/pages/';
-
-module.exports = dir_to_generate;
-```
 
 
 ## 什么时候使用这个库
@@ -144,6 +128,24 @@ class CounterViewModel extends StoreViewModel {
 }
 export { CounterViewModel } 
 ```
+
+## 模板生成
+
+你可以根据如下步骤快速生成项目模板：
+
+```bash
+scripts: {
+  "generate": "plop --plopfile ./node_modules/hooks-view-model/generators/index.js"
+}
+```
+2、在根目录创建 `template.config.js` :
+
+```bash
+const dir_to_generate = './src/pages/';
+
+module.exports = dir_to_generate;
+```
+
 
 ## API 文档
 
