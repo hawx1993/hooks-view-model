@@ -25,7 +25,7 @@
 
 [中文文档](./README.zh-cn.md)
 
-`hooks-view-model` is a solution that make react hooks support MVVM and aims to separates UI from business logic and provide immutable data & global state management, memory management and persistent data management and provide intuitive API.
+`hooks-view-model` is a solution that make react hooks support MVVM without introduce any third-party libriries and aims to separates UI from business logic and provide immutable data & global state management, memory management and persistent data management and provide intuitive API.
 
 Using `hooks-view-model` will bring a lot of convenience as follows:
 
