@@ -24,7 +24,7 @@ class StoreViewModel<P = {}> {
     this.props = props;
   }
   private _setCurrentStateValue = <K, ValueType>(
-    key,
+    key: K,
     defaultValue?: ValueType,
   ) => {
     if (!currentState.has(key)) {
@@ -35,7 +35,7 @@ class StoreViewModel<P = {}> {
     }
   };
   private _setGlobalStateValue = <K, ValueType>(
-    key,
+    key: K,
     defaultValue?: ValueType,
   ) => {
     if (!globalState.has(key)) {

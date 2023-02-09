@@ -29,7 +29,7 @@ function useVM<VM extends StoreViewModel<P>, P, T>(
     vm.mounted();
     const cleanup = () => {
       vm.unmounted();
-      return (vm = null);
+      return;
     };
     return cleanup;
   }, [vm]);
