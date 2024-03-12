@@ -8,6 +8,12 @@
     "release": "npm run build && npm publish",
     "test": "jest __tests__/StoreViewModel.test.ts"
   },
+  "homepage": "https://github.com/hawx1993",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hawx1993/hooks-view-model",
+    "github": "https://github.com/hawx1993"
+  },
   "keywords": [
     "hooks-view-model",
     "react hooks",
